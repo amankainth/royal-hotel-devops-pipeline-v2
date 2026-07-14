@@ -1,0 +1,18 @@
+royal-hotel-devops-pipeline-v2/
+├── .gitignore
+├── README.md
+├── Jenkinsfile                    # Main pipeline (apply)
+├── Jenkinsfile.destroy            # Destroy pipeline
+├── bootstrap/
+│   └── setup-backend.sh           # One-time S3/DynamoDB setup
+├── terraform/
+│   ├── backend.tf                 # S3 backend config
+│   ├── providers.tf               # Terraform + AWS provider
+│   ├── variables.tf               # Input variables
+│   ├── main.tf                    # VPC, EC2, SG resources
+│   ├── outputs.tf                 # Output values
+│   └── terraform.tfvars.example   # Example variable values
+└── ansible/
+    ├── ansible.cfg                # Ansible configuration
+    ├── inventory.ini.example      # Example inventory
+    └── playbook.yml               # Server configuration
