@@ -153,7 +153,7 @@ resource "local_sensitive_file" "dev_key_pem" {
 # ============================================
 
 resource "aws_instance" "dev_instance" {
-  ami                    = data.aws_ami.amazon_linux_2023.id
+  ami                    = var.ami_id
   instance_type          = var.instance_type
   subnet_id              = aws_subnet.public.id
   vpc_security_group_ids = [aws_security_group.dev_instance.id]
