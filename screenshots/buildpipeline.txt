@@ -1,0 +1,982 @@
+Started by user Aman
+Obtained Jenkinsfile from git https://github.com/amankainth/royal-hotel-devops-pipeline-v2.git
+[Pipeline] Start of Pipeline
+[Pipeline] node
+Running on Jenkins in /var/lib/jenkins/workspace/pipeline-v2-tf
+[Pipeline] {
+[Pipeline] stage
+[Pipeline] { (Declarative: Checkout SCM)
+[Pipeline] checkout
+Selected Git installation does not exist. Using Default
+The recommended git tool is: NONE
+No credentials specified
+ > git rev-parse --resolve-git-dir /var/lib/jenkins/workspace/pipeline-v2-tf/.git # timeout=10
+Fetching changes from the remote Git repository
+ > git config remote.origin.url https://github.com/amankainth/royal-hotel-devops-pipeline-v2.git # timeout=10
+Fetching upstream changes from https://github.com/amankainth/royal-hotel-devops-pipeline-v2.git
+ > git --version # timeout=10
+ > git --version # 'git version 2.50.1'
+ > git fetch --tags --force --progress -- https://github.com/amankainth/royal-hotel-devops-pipeline-v2.git +refs/heads/*:refs/remotes/origin/* # timeout=10
+ > git rev-parse refs/remotes/origin/main^{commit} # timeout=10
+Checking out Revision c17999d8f669c619580050c5e34755654900d60a (refs/remotes/origin/main)
+ > git config core.sparsecheckout # timeout=10
+ > git checkout -f c17999d8f669c619580050c5e34755654900d60a # timeout=10
+Commit message: "Update main.tf"
+ > git rev-list --no-walk 78829b3d656b6c08b426cec7649534e1fa78d966 # timeout=10
+[Pipeline] }
+[Pipeline] // stage
+[Pipeline] withEnv
+[Pipeline] {
+[Pipeline] withEnv
+[Pipeline] {
+[Pipeline] timeout
+Timeout set to expire in 40 min
+[Pipeline] {
+[Pipeline] timestamps
+[Pipeline] {
+[Pipeline] stage
+[Pipeline] { (Checkout Code)
+[Pipeline] echo
+[2026-07-14T07:35:45.706Z] Pulling code from GitHub...
+[Pipeline] checkout
+[2026-07-14T07:35:45.721Z] Selected Git installation does not exist. Using Default
+[2026-07-14T07:35:45.721Z] The recommended git tool is: NONE
+[2026-07-14T07:35:45.721Z] No credentials specified
+[2026-07-14T07:35:45.722Z]  > git rev-parse --resolve-git-dir /var/lib/jenkins/workspace/pipeline-v2-tf/.git # timeout=10
+[2026-07-14T07:35:45.728Z] Fetching changes from the remote Git repository
+[2026-07-14T07:35:45.729Z]  > git config remote.origin.url https://github.com/amankainth/royal-hotel-devops-pipeline-v2.git # timeout=10
+[2026-07-14T07:35:45.734Z] Fetching upstream changes from https://github.com/amankainth/royal-hotel-devops-pipeline-v2.git
+[2026-07-14T07:35:45.734Z]  > git --version # timeout=10
+[2026-07-14T07:35:45.737Z]  > git --version # 'git version 2.50.1'
+[2026-07-14T07:35:45.737Z]  > git fetch --tags --force --progress -- https://github.com/amankainth/royal-hotel-devops-pipeline-v2.git +refs/heads/*:refs/remotes/origin/* # timeout=10
+[2026-07-14T07:35:45.799Z]  > git rev-parse refs/remotes/origin/main^{commit} # timeout=10
+[2026-07-14T07:35:45.803Z] Checking out Revision c17999d8f669c619580050c5e34755654900d60a (refs/remotes/origin/main)
+[2026-07-14T07:35:45.803Z]  > git config core.sparsecheckout # timeout=10
+[2026-07-14T07:35:45.806Z]  > git checkout -f c17999d8f669c619580050c5e34755654900d60a # timeout=10
+[2026-07-14T07:35:45.811Z] Commit message: "Update main.tf"
+[Pipeline] }
+[Pipeline] // stage
+[Pipeline] stage
+[Pipeline] { (Prepare Jenkins Environment)
+[Pipeline] sh
+[2026-07-14T07:35:46.151Z] + mkdir -p /var/lib/jenkins/.ssh
+[2026-07-14T07:35:46.151Z] + chmod 700 /var/lib/jenkins/.ssh
+[Pipeline] }
+[Pipeline] // stage
+[Pipeline] stage
+[Pipeline] { (Terraform Init)
+[Pipeline] dir
+[2026-07-14T07:35:46.234Z] Running in /var/lib/jenkins/workspace/pipeline-v2-tf/terraform
+[Pipeline] {
+[Pipeline] echo
+[2026-07-14T07:35:46.262Z] Initializing Terraform with S3 backend...
+[Pipeline] sh
+[2026-07-14T07:35:46.528Z] + terraform init -input=false
+[2026-07-14T07:35:46.528Z] Initializing the backend...
+[2026-07-14T07:35:46.528Z] 
+[2026-07-14T07:35:46.528Z] Successfully configured the backend "s3"! Terraform will automatically
+[2026-07-14T07:35:46.528Z] use this backend unless the backend configuration changes.
+[2026-07-14T07:35:46.528Z] 
+[2026-07-14T07:35:46.778Z] Initializing provider plugins...
+[2026-07-14T07:35:46.778Z] - Reusing previous version of hashicorp/aws from the dependency lock file
+[2026-07-14T07:35:46.778Z] - Reusing previous version of hashicorp/tls from the dependency lock file
+[2026-07-14T07:35:46.778Z] - Reusing previous version of hashicorp/local from the dependency lock file
+[2026-07-14T07:35:46.778Z] - Installing hashicorp/aws v5.100.0...
+[2026-07-14T07:35:58.875Z] - Installed hashicorp/aws v5.100.0 (signed by HashiCorp)
+[2026-07-14T07:35:58.875Z] - Installing hashicorp/tls v4.3.0...
+[2026-07-14T07:35:59.426Z] - Installed hashicorp/tls v4.3.0 (signed by HashiCorp)
+[2026-07-14T07:35:59.426Z] - Installing hashicorp/local v2.9.0...
+[2026-07-14T07:35:59.676Z] - Installed hashicorp/local v2.9.0 (signed by HashiCorp)
+[2026-07-14T07:35:59.676Z] 
+[2026-07-14T07:35:59.676Z] 
+[2026-07-14T07:35:59.676Z] Terraform has been successfully initialized!
+[Pipeline] }
+[Pipeline] // dir
+[Pipeline] }
+[Pipeline] // stage
+[Pipeline] stage
+[Pipeline] { (Terraform Validate)
+[Pipeline] dir
+[2026-07-14T07:36:00.126Z] Running in /var/lib/jenkins/workspace/pipeline-v2-tf/terraform
+[Pipeline] {
+[Pipeline] echo
+[2026-07-14T07:36:00.156Z] Validating Terraform configuration...
+[Pipeline] sh
+[2026-07-14T07:36:00.423Z] + terraform fmt -check -diff
+[2026-07-14T07:36:00.423Z] + terraform validate
+[2026-07-14T07:36:06.914Z] Success! The configuration is valid.
+[2026-07-14T07:36:06.914Z] 
+[Pipeline] }
+[Pipeline] // dir
+[Pipeline] }
+[Pipeline] // stage
+[Pipeline] stage
+[Pipeline] { (Terraform Plan)
+[Pipeline] timeout
+[2026-07-14T07:36:06.997Z] Timeout set to expire in 5 min 0 sec
+[Pipeline] {
+[Pipeline] dir
+[2026-07-14T07:36:07.020Z] Running in /var/lib/jenkins/workspace/pipeline-v2-tf/terraform
+[Pipeline] {
+[Pipeline] echo
+[2026-07-14T07:36:07.039Z] Creating Terraform execution plan...
+[Pipeline] sh
+[2026-07-14T07:36:07.303Z] + terraform plan -input=false -out=tfplan
+[2026-07-14T07:36:13.794Z] tls_private_key.dev_key: Refreshing state... [id=46597ac5901570d48d9d8e7c5f5a4e03e07713e7]
+[2026-07-14T07:36:13.794Z] local_sensitive_file.dev_key_pem: Refreshing state... [id=31ad5204c02746856bec012b16694d8f9c79ab10]
+[2026-07-14T07:36:13.794Z] aws_key_pair.dev_key: Refreshing state... [id=royal-hotel-dev-key]
+[2026-07-14T07:36:13.794Z] data.aws_ami.amazon_linux_2023: Reading...
+[2026-07-14T07:36:13.794Z] aws_vpc.main: Refreshing state... [id=vpc-0b587ff4cde2cee00]
+[2026-07-14T07:36:13.794Z] data.aws_ami.amazon_linux_2023: Read complete after 0s [id=ami-0fd6240f599091088]
+[2026-07-14T07:36:13.794Z] aws_internet_gateway.main: Refreshing state... [id=igw-026eb8ab3fc15dc13]
+[2026-07-14T07:36:13.794Z] aws_subnet.public: Refreshing state... [id=subnet-0a64b19d6a917c993]
+[2026-07-14T07:36:13.794Z] aws_security_group.dev_instance: Refreshing state... [id=sg-017c56e1b03562fb2]
+[2026-07-14T07:36:13.794Z] aws_route_table.public: Refreshing state... [id=rtb-009d6b3b5e86ad0f1]
+[2026-07-14T07:36:13.794Z] aws_instance.dev_instance: Refreshing state... [id=i-0b8b267a3ffc8752e]
+[2026-07-14T07:36:13.794Z] aws_route_table_association.public: Refreshing state... [id=rtbassoc-03c7344dfe8a5f106]
+[2026-07-14T07:36:15.138Z] 
+[2026-07-14T07:36:15.138Z] Terraform used the selected providers to generate the following execution
+[2026-07-14T07:36:15.138Z] plan. Resource actions are indicated with the following symbols:
+[2026-07-14T07:36:15.138Z]   ~ update in-place
+[2026-07-14T07:36:15.138Z] 
+[2026-07-14T07:36:15.138Z] Terraform will perform the following actions:
+[2026-07-14T07:36:15.138Z] 
+[2026-07-14T07:36:15.138Z]   # aws_security_group.dev_instance will be updated in-place
+[2026-07-14T07:36:15.138Z]   ~ resource "aws_security_group" "dev_instance" {
+[2026-07-14T07:36:15.138Z]         id                     = "sg-017c56e1b03562fb2"
+[2026-07-14T07:36:15.138Z]       ~ ingress                = [
+[2026-07-14T07:36:15.138Z]           + {
+[2026-07-14T07:36:15.138Z]               + cidr_blocks      = [
+[2026-07-14T07:36:15.138Z]                   + "0.0.0.0/0",
+[2026-07-14T07:36:15.138Z]                 ]
+[2026-07-14T07:36:15.138Z]               + description      = "Royal Hotel App"
+[2026-07-14T07:36:15.138Z]               + from_port        = 8080
+[2026-07-14T07:36:15.138Z]               + ipv6_cidr_blocks = []
+[2026-07-14T07:36:15.138Z]               + prefix_list_ids  = []
+[2026-07-14T07:36:15.138Z]               + protocol         = "tcp"
+[2026-07-14T07:36:15.138Z]               + security_groups  = []
+[2026-07-14T07:36:15.138Z]               + self             = false
+[2026-07-14T07:36:15.138Z]               + to_port          = 8080
+[2026-07-14T07:36:15.138Z]             },
+[2026-07-14T07:36:15.138Z]             # (4 unchanged elements hidden)
+[2026-07-14T07:36:15.138Z]         ]
+[2026-07-14T07:36:15.138Z]         name                   = "royal-hotel-dev-sg"
+[2026-07-14T07:36:15.138Z]         tags                   = {
+[2026-07-14T07:36:15.138Z]             "Name" = "royal-hotel-dev-sg"
+[2026-07-14T07:36:15.138Z]         }
+[2026-07-14T07:36:15.138Z]         # (8 unchanged attributes hidden)
+[2026-07-14T07:36:15.138Z]     }
+[2026-07-14T07:36:15.138Z] 
+[2026-07-14T07:36:15.138Z] Plan: 0 to add, 1 to change, 0 to destroy.
+[Pipeline] }
+[Pipeline] // dir
+[Pipeline] }
+[Pipeline] // timeout
+[Pipeline] }
+[Pipeline] // stage
+[Pipeline] stage
+[Pipeline] { (Terraform Apply)
+[Pipeline] timeout
+[2026-07-14T07:36:15.488Z] Timeout set to expire in 15 min
+[Pipeline] {
+[Pipeline] dir
+[2026-07-14T07:36:15.516Z] Running in /var/lib/jenkins/workspace/pipeline-v2-tf/terraform
+[Pipeline] {
+[Pipeline] echo
+[2026-07-14T07:36:15.539Z] Provisioning AWS infrastructure...
+[Pipeline] sh
+[2026-07-14T07:36:15.801Z] + terraform apply -input=false -auto-approve tfplan
+[2026-07-14T07:36:22.286Z] aws_security_group.dev_instance: Modifying... [id=sg-017c56e1b03562fb2]
+[2026-07-14T07:36:22.286Z] aws_security_group.dev_instance: Modifications complete after 1s [id=sg-017c56e1b03562fb2]
+[2026-07-14T07:36:22.286Z] 
+[2026-07-14T07:36:22.286Z] Apply complete! Resources: 0 added, 1 changed, 0 destroyed.
+[2026-07-14T07:36:22.286Z] 
+[2026-07-14T07:36:22.286Z] Outputs:
+[2026-07-14T07:36:22.286Z] 
+[2026-07-14T07:36:22.286Z] app_url = "http://54.211.144.46"
+[2026-07-14T07:36:22.286Z] dev_instance_id = "i-0b8b267a3ffc8752e"
+[2026-07-14T07:36:22.286Z] dev_instance_private_ip = "10.10.1.58"
+[2026-07-14T07:36:22.286Z] dev_instance_public_ip = "54.211.144.46"
+[2026-07-14T07:36:22.286Z] security_group_id = "sg-017c56e1b03562fb2"
+[2026-07-14T07:36:22.286Z] ssh_command = "ssh -i /var/lib/jenkins/.ssh/royal-hotel-dev-key.pem ec2-user@54.211.144.46"
+[2026-07-14T07:36:22.286Z] ssh_key_path = "/var/lib/jenkins/.ssh/royal-hotel-dev-key.pem"
+[2026-07-14T07:36:22.286Z] subnet_id = "subnet-0a64b19d6a917c993"
+[2026-07-14T07:36:22.286Z] vpc_id = "vpc-0b587ff4cde2cee00"
+[Pipeline] }
+[Pipeline] // dir
+[Pipeline] }
+[Pipeline] // timeout
+[Pipeline] }
+[Pipeline] // stage
+[Pipeline] stage
+[Pipeline] { (Extract Terraform Outputs)
+[Pipeline] dir
+[2026-07-14T07:36:22.399Z] Running in /var/lib/jenkins/workspace/pipeline-v2-tf/terraform
+[Pipeline] {
+[Pipeline] script
+[Pipeline] {
+[Pipeline] echo
+[2026-07-14T07:36:22.441Z] Extracting Terraform outputs...
+[Pipeline] sh
+[2026-07-14T07:36:22.713Z] + terraform output -raw dev_instance_public_ip
+[Pipeline] sh
+[2026-07-14T07:36:25.466Z] + terraform output -raw ssh_key_path
+[Pipeline] echo
+[2026-07-14T07:36:28.030Z] Dev Server IP: 54.211.144.46
+[Pipeline] echo
+[2026-07-14T07:36:28.038Z] SSH Key Path: /var/lib/jenkins/.ssh/royal-hotel-dev-key.pem
+[Pipeline] }
+[Pipeline] // script
+[Pipeline] }
+[Pipeline] // dir
+[Pipeline] }
+[Pipeline] // stage
+[Pipeline] stage
+[Pipeline] { (Generate Ansible Inventory)
+[Pipeline] echo
+[2026-07-14T07:36:28.147Z] Generating Ansible inventory dynamically from Terraform output...
+[Pipeline] sh
+[2026-07-14T07:36:28.411Z] + cat
+[2026-07-14T07:36:28.412Z] + echo 'Generated Ansible inventory:'
+[2026-07-14T07:36:28.412Z] Generated Ansible inventory:
+[2026-07-14T07:36:28.412Z] + cat ansible/inventory.ini
+[2026-07-14T07:36:28.412Z] [webservers]
+[2026-07-14T07:36:28.412Z] 54.211.144.46 ansible_user=ec2-user ansible_ssh_private_key_file=/var/lib/jenkins/.ssh/royal-hotel-dev-key.pem ansible_ssh_common_args='-o StrictHostKeyChecking=no -o UserKnownHostsFile=/dev/null'
+[2026-07-14T07:36:28.412Z] 
+[2026-07-14T07:36:28.412Z] [webservers:vars]
+[2026-07-14T07:36:28.412Z] ansible_python_interpreter=/usr/bin/python3
+[Pipeline] }
+[Pipeline] // stage
+[Pipeline] stage
+[Pipeline] { (Wait for EC2 SSH)
+[Pipeline] timeout
+[2026-07-14T07:36:28.469Z] Timeout set to expire in 5 min 0 sec
+[Pipeline] {
+[Pipeline] echo
+[2026-07-14T07:36:28.492Z] Waiting for EC2 SSH to become available...
+[Pipeline] sh
+[2026-07-14T07:36:28.756Z] + for i in {1..18}
+[2026-07-14T07:36:28.756Z] + ssh -i /var/lib/jenkins/.ssh/royal-hotel-dev-key.pem -o StrictHostKeyChecking=no -o UserKnownHostsFile=/dev/null -o ConnectTimeout=5 ec2-user@54.211.144.46 'echo SSH_READY'
+[2026-07-14T07:36:29.006Z] SSH_READY
+[2026-07-14T07:36:29.006Z] + echo 'SSH is ready.'
+[2026-07-14T07:36:29.006Z] SSH is ready.
+[2026-07-14T07:36:29.006Z] + exit 0
+[Pipeline] }
+[Pipeline] // timeout
+[Pipeline] }
+[Pipeline] // stage
+[Pipeline] stage
+[Pipeline] { (Run Ansible Playbook)
+[Pipeline] timeout
+[2026-07-14T07:36:29.087Z] Timeout set to expire in 25 min
+[Pipeline] {
+[Pipeline] dir
+[2026-07-14T07:36:29.109Z] Running in /var/lib/jenkins/workspace/pipeline-v2-tf/ansible
+[Pipeline] {
+[Pipeline] echo
+[2026-07-14T07:36:29.128Z] Running Ansible playbook to deploy Royal Hotel application...
+[Pipeline] sh
+[2026-07-14T07:36:29.388Z] + ansible-playbook -i inventory.ini playbook.yml -v
+[2026-07-14T07:36:30.299Z] Using /var/lib/jenkins/workspace/pipeline-v2-tf/ansible/ansible.cfg as config file
+[2026-07-14T07:36:30.299Z] 
+[2026-07-14T07:36:30.299Z] PLAY [Configure and Deploy Royal Hotel Application Server] *********************
+[2026-07-14T07:36:30.299Z] 
+[2026-07-14T07:36:30.299Z] TASK [Gathering Facts] *********************************************************
+[2026-07-14T07:36:31.643Z] ok: [54.211.144.46]
+[2026-07-14T07:36:31.643Z] 
+[2026-07-14T07:36:31.643Z] TASK [Display target server information] ***************************************
+[2026-07-14T07:36:31.643Z] ok: [54.211.144.46] => 
+[2026-07-14T07:36:31.643Z]   msg:
+[2026-07-14T07:36:31.643Z]   - 'Target Host: 54.211.144.46'
+[2026-07-14T07:36:31.643Z]   - 'OS: Amazon 2023'
+[2026-07-14T07:36:31.643Z]   - 'Application: royal-hotel'
+[2026-07-14T07:36:31.643Z]   - 'Repository: https://github.com/amankainth/hotel_management_health.git'
+[2026-07-14T07:36:31.643Z]   - 'Main Class: com.example.SimpleWebApp'
+[2026-07-14T07:36:31.643Z] 
+[2026-07-14T07:36:31.643Z] TASK [Update all OS packages] **************************************************
+[2026-07-14T07:36:33.504Z] ok: [54.211.144.46] => changed=false 
+[2026-07-14T07:36:33.504Z]   msg: Nothing to do
+[2026-07-14T07:36:33.504Z]   rc: 0
+[2026-07-14T07:36:33.504Z]   results: []
+[2026-07-14T07:36:33.504Z] 
+[2026-07-14T07:36:33.504Z] TASK [Install Java 17, Git and required tools] *********************************
+[2026-07-14T07:36:34.055Z] ok: [54.211.144.46] => changed=false 
+[2026-07-14T07:36:34.055Z]   msg: Nothing to do
+[2026-07-14T07:36:34.055Z]   rc: 0
+[2026-07-14T07:36:34.055Z]   results: []
+[2026-07-14T07:36:34.055Z] 
+[2026-07-14T07:36:34.055Z] TASK [Verify Java version] *****************************************************
+[2026-07-14T07:36:34.606Z] ok: [54.211.144.46] => changed=false 
+[2026-07-14T07:36:34.606Z]   cmd:
+[2026-07-14T07:36:34.606Z]   - java
+[2026-07-14T07:36:34.606Z]   - -version
+[2026-07-14T07:36:34.606Z]   delta: '0:00:00.036308'
+[2026-07-14T07:36:34.606Z]   end: '2026-07-14 07:36:34.341453'
+[2026-07-14T07:36:34.606Z]   msg: ''
+[2026-07-14T07:36:34.606Z]   rc: 0
+[2026-07-14T07:36:34.606Z]   start: '2026-07-14 07:36:34.305145'
+[2026-07-14T07:36:34.606Z]   stderr: |-
+[2026-07-14T07:36:34.606Z]     openjdk version "17.0.19" 2026-04-21 LTS
+[2026-07-14T07:36:34.606Z]     OpenJDK Runtime Environment Corretto-17.0.19.10.1 (build 17.0.19+10-LTS)
+[2026-07-14T07:36:34.606Z]     OpenJDK 64-Bit Server VM Corretto-17.0.19.10.1 (build 17.0.19+10-LTS, mixed mode, sharing)
+[2026-07-14T07:36:34.606Z]   stderr_lines: <omitted>
+[2026-07-14T07:36:34.606Z]   stdout: ''
+[2026-07-14T07:36:34.606Z]   stdout_lines: <omitted>
+[2026-07-14T07:36:34.606Z] 
+[2026-07-14T07:36:34.606Z] TASK [Show Java version] *******************************************************
+[2026-07-14T07:36:34.606Z] ok: [54.211.144.46] => 
+[2026-07-14T07:36:34.606Z]   java_version.stderr_lines:
+[2026-07-14T07:36:34.606Z]   - openjdk version "17.0.19" 2026-04-21 LTS
+[2026-07-14T07:36:34.606Z]   - OpenJDK Runtime Environment Corretto-17.0.19.10.1 (build 17.0.19+10-LTS)
+[2026-07-14T07:36:34.606Z]   - OpenJDK 64-Bit Server VM Corretto-17.0.19.10.1 (build 17.0.19+10-LTS, mixed mode, sharing)
+[2026-07-14T07:36:34.606Z] 
+[2026-07-14T07:36:34.606Z] TASK [Create application base directory] ***************************************
+[2026-07-14T07:36:34.856Z] ok: [54.211.144.46] => changed=false 
+[2026-07-14T07:36:34.856Z]   gid: 1000
+[2026-07-14T07:36:34.856Z]   group: ec2-user
+[2026-07-14T07:36:34.856Z]   mode: '0755'
+[2026-07-14T07:36:34.856Z]   owner: ec2-user
+[2026-07-14T07:36:34.856Z]   path: /opt/royal-hotel
+[2026-07-14T07:36:34.856Z]   secontext: unconfined_u:object_r:usr_t:s0
+[2026-07-14T07:36:34.856Z]   size: 17
+[2026-07-14T07:36:34.856Z]   state: directory
+[2026-07-14T07:36:34.856Z]   uid: 1000
+[2026-07-14T07:36:34.856Z] 
+[2026-07-14T07:36:34.856Z] TASK [Create application logs directory] ***************************************
+[2026-07-14T07:36:35.107Z] ok: [54.211.144.46] => changed=false 
+[2026-07-14T07:36:35.107Z]   gid: 1000
+[2026-07-14T07:36:35.107Z]   group: ec2-user
+[2026-07-14T07:36:35.107Z]   mode: '0755'
+[2026-07-14T07:36:35.107Z]   owner: ec2-user
+[2026-07-14T07:36:35.107Z]   path: /var/log/royal-hotel
+[2026-07-14T07:36:35.107Z]   secontext: unconfined_u:object_r:var_log_t:s0
+[2026-07-14T07:36:35.107Z]   size: 6
+[2026-07-14T07:36:35.107Z]   state: directory
+[2026-07-14T07:36:35.107Z]   uid: 1000
+[2026-07-14T07:36:35.107Z] 
+[2026-07-14T07:36:35.107Z] TASK [Stop existing Royal Hotel service if running] ****************************
+[2026-07-14T07:36:36.017Z] fatal: [54.211.144.46]: FAILED! => changed=false 
+[2026-07-14T07:36:36.017Z]   msg: 'Could not find the requested service royal-hotel: host'
+[2026-07-14T07:36:36.018Z] ...ignoring
+[2026-07-14T07:36:36.018Z] 
+[2026-07-14T07:36:36.018Z] TASK [Clone Royal Hotel application repository] ********************************
+[2026-07-14T07:36:36.569Z] ok: [54.211.144.46] => changed=false 
+[2026-07-14T07:36:36.569Z]   after: aba8c7fff876d8fd2e75012edf2ade56043669dc
+[2026-07-14T07:36:36.569Z]   before: aba8c7fff876d8fd2e75012edf2ade56043669dc
+[2026-07-14T07:36:36.569Z]   remote_url_changed: false
+[2026-07-14T07:36:36.569Z] 
+[2026-07-14T07:36:36.569Z] TASK [Create build output directory] *******************************************
+[2026-07-14T07:36:36.820Z] changed: [54.211.144.46] => changed=true 
+[2026-07-14T07:36:36.820Z]   gid: 1000
+[2026-07-14T07:36:36.820Z]   group: ec2-user
+[2026-07-14T07:36:36.820Z]   mode: '0755'
+[2026-07-14T07:36:36.820Z]   owner: ec2-user
+[2026-07-14T07:36:36.820Z]   path: /opt/royal-hotel/app/build
+[2026-07-14T07:36:36.820Z]   secontext: unconfined_u:object_r:usr_t:s0
+[2026-07-14T07:36:36.820Z]   size: 6
+[2026-07-14T07:36:36.820Z]   state: directory
+[2026-07-14T07:36:36.820Z]   uid: 1000
+[2026-07-14T07:36:36.820Z] 
+[2026-07-14T07:36:36.820Z] TASK [Find all Java source files] **********************************************
+[2026-07-14T07:36:37.070Z] ok: [54.211.144.46] => changed=false 
+[2026-07-14T07:36:37.070Z]   examined: 3
+[2026-07-14T07:36:37.070Z]   files:
+[2026-07-14T07:36:37.070Z]   - atime: 1784014292.1079006
+[2026-07-14T07:36:37.070Z]     ctime: 1784014292.1079006
+[2026-07-14T07:36:37.070Z]     dev: 66305
+[2026-07-14T07:36:37.070Z]     gid: 1000
+[2026-07-14T07:36:37.070Z]     gr_name: ec2-user
+[2026-07-14T07:36:37.070Z]     inode: 16788402
+[2026-07-14T07:36:37.070Z]     isblk: false
+[2026-07-14T07:36:37.070Z]     ischr: false
+[2026-07-14T07:36:37.070Z]     isdir: false
+[2026-07-14T07:36:37.070Z]     isfifo: false
+[2026-07-14T07:36:37.070Z]     isgid: false
+[2026-07-14T07:36:37.070Z]     islnk: false
+[2026-07-14T07:36:37.070Z]     isreg: true
+[2026-07-14T07:36:37.070Z]     issock: false
+[2026-07-14T07:36:37.070Z]     isuid: false
+[2026-07-14T07:36:37.070Z]     mode: '0664'
+[2026-07-14T07:36:37.070Z]     mtime: 1784014292.1079006
+[2026-07-14T07:36:37.070Z]     nlink: 1
+[2026-07-14T07:36:37.070Z]     path: /opt/royal-hotel/app/src/com/example/SimpleWebApp.java
+[2026-07-14T07:36:37.070Z]     pw_name: ec2-user
+[2026-07-14T07:36:37.070Z]     rgrp: true
+[2026-07-14T07:36:37.070Z]     roth: true
+[2026-07-14T07:36:37.070Z]     rusr: true
+[2026-07-14T07:36:37.070Z]     size: 8725
+[2026-07-14T07:36:37.070Z]     uid: 1000
+[2026-07-14T07:36:37.070Z]     wgrp: true
+[2026-07-14T07:36:37.070Z]     woth: false
+[2026-07-14T07:36:37.070Z]     wusr: true
+[2026-07-14T07:36:37.070Z]     xgrp: false
+[2026-07-14T07:36:37.070Z]     xoth: false
+[2026-07-14T07:36:37.070Z]     xusr: false
+[2026-07-14T07:36:37.070Z]   matched: 1
+[2026-07-14T07:36:37.070Z]   msg: All paths examined
+[2026-07-14T07:36:37.070Z]   skipped_paths: {}
+[2026-07-14T07:36:37.070Z] 
+[2026-07-14T07:36:37.070Z] TASK [Fail if no Java source files found] **************************************
+[2026-07-14T07:36:37.070Z] skipping: [54.211.144.46] => changed=false 
+[2026-07-14T07:36:37.070Z]   false_condition: java_files.files | length == 0
+[2026-07-14T07:36:37.070Z]   skip_reason: Conditional result was False
+[2026-07-14T07:36:37.070Z] 
+[2026-07-14T07:36:37.070Z] TASK [Show found Java files] ***************************************************
+[2026-07-14T07:36:37.070Z] ok: [54.211.144.46] => 
+[2026-07-14T07:36:37.070Z]   msg: Found 1 Java source file(s)
+[2026-07-14T07:36:37.070Z] 
+[2026-07-14T07:36:37.070Z] TASK [Compile Java sources with javac] *****************************************
+[2026-07-14T07:36:38.413Z] changed: [54.211.144.46] => changed=true 
+[2026-07-14T07:36:38.413Z]   cmd: |-
+[2026-07-14T07:36:38.413Z]     cd /opt/royal-hotel/app
+[2026-07-14T07:36:38.413Z]     javac -d /opt/royal-hotel/app/build $(find src -name "*.java")
+[2026-07-14T07:36:38.413Z]   delta: '0:00:00.916081'
+[2026-07-14T07:36:38.413Z]   end: '2026-07-14 07:36:38.160365'
+[2026-07-14T07:36:38.413Z]   msg: ''
+[2026-07-14T07:36:38.413Z]   rc: 0
+[2026-07-14T07:36:38.413Z]   start: '2026-07-14 07:36:37.244284'
+[2026-07-14T07:36:38.413Z]   stderr: ''
+[2026-07-14T07:36:38.413Z]   stderr_lines: <omitted>
+[2026-07-14T07:36:38.413Z]   stdout: ''
+[2026-07-14T07:36:38.413Z]   stdout_lines: <omitted>
+[2026-07-14T07:36:38.413Z] 
+[2026-07-14T07:36:38.413Z] TASK [Show compile output] *****************************************************
+[2026-07-14T07:36:38.413Z] ok: [54.211.144.46] => 
+[2026-07-14T07:36:38.413Z]   msg: Compilation successful
+[2026-07-14T07:36:38.413Z] 
+[2026-07-14T07:36:38.413Z] TASK [List compiled classes] ***************************************************
+[2026-07-14T07:36:38.664Z] ok: [54.211.144.46] => changed=false 
+[2026-07-14T07:36:38.664Z]   cmd: find /opt/royal-hotel/app/build -name "*.class"
+[2026-07-14T07:36:38.664Z]   delta: '0:00:00.004822'
+[2026-07-14T07:36:38.664Z]   end: '2026-07-14 07:36:38.471350'
+[2026-07-14T07:36:38.664Z]   msg: ''
+[2026-07-14T07:36:38.664Z]   rc: 0
+[2026-07-14T07:36:38.664Z]   start: '2026-07-14 07:36:38.466528'
+[2026-07-14T07:36:38.664Z]   stderr: ''
+[2026-07-14T07:36:38.664Z]   stderr_lines: <omitted>
+[2026-07-14T07:36:38.664Z]   stdout: |-
+[2026-07-14T07:36:38.664Z]     /opt/royal-hotel/app/build/com/example/SimpleWebApp$1.class
+[2026-07-14T07:36:38.664Z]     /opt/royal-hotel/app/build/com/example/SimpleWebApp.class
+[2026-07-14T07:36:38.664Z]   stdout_lines: <omitted>
+[2026-07-14T07:36:38.664Z] 
+[2026-07-14T07:36:38.664Z] TASK [Show compiled classes] ***************************************************
+[2026-07-14T07:36:38.664Z] ok: [54.211.144.46] => 
+[2026-07-14T07:36:38.664Z]   class_files.stdout_lines:
+[2026-07-14T07:36:38.664Z]   - /opt/royal-hotel/app/build/com/example/SimpleWebApp$1.class
+[2026-07-14T07:36:38.664Z]   - /opt/royal-hotel/app/build/com/example/SimpleWebApp.class
+[2026-07-14T07:36:38.664Z] 
+[2026-07-14T07:36:38.664Z] TASK [Verify main class exists] ************************************************
+[2026-07-14T07:36:39.215Z] ok: [54.211.144.46] => changed=false 
+[2026-07-14T07:36:39.215Z]   stat:
+[2026-07-14T07:36:39.215Z]     atime: 1784014598.1364055
+[2026-07-14T07:36:39.215Z]     attr_flags: ''
+[2026-07-14T07:36:39.215Z]     attributes: []
+[2026-07-14T07:36:39.215Z]     block_size: 4096
+[2026-07-14T07:36:39.215Z]     blocks: 8
+[2026-07-14T07:36:39.215Z]     charset: binary
+[2026-07-14T07:36:39.215Z]     checksum: b18021b8d87eb1229f909223f1d83a43e05e6599
+[2026-07-14T07:36:39.215Z]     ctime: 1784014598.1364055
+[2026-07-14T07:36:39.215Z]     dev: 66305
+[2026-07-14T07:36:39.215Z]     device_type: 0
+[2026-07-14T07:36:39.215Z]     executable: false
+[2026-07-14T07:36:39.215Z]     exists: true
+[2026-07-14T07:36:39.215Z]     gid: 1000
+[2026-07-14T07:36:39.215Z]     gr_name: ec2-user
+[2026-07-14T07:36:39.215Z]     inode: 16795080
+[2026-07-14T07:36:39.215Z]     isblk: false
+[2026-07-14T07:36:39.215Z]     ischr: false
+[2026-07-14T07:36:39.215Z]     isdir: false
+[2026-07-14T07:36:39.215Z]     isfifo: false
+[2026-07-14T07:36:39.215Z]     isgid: false
+[2026-07-14T07:36:39.215Z]     islnk: false
+[2026-07-14T07:36:39.215Z]     isreg: true
+[2026-07-14T07:36:39.215Z]     issock: false
+[2026-07-14T07:36:39.215Z]     isuid: false
+[2026-07-14T07:36:39.215Z]     mimetype: application/x-java-applet
+[2026-07-14T07:36:39.215Z]     mode: '0664'
+[2026-07-14T07:36:39.215Z]     mtime: 1784014598.1364055
+[2026-07-14T07:36:39.215Z]     nlink: 1
+[2026-07-14T07:36:39.215Z]     path: /opt/royal-hotel/app/build/com/example/SimpleWebApp.class
+[2026-07-14T07:36:39.215Z]     pw_name: ec2-user
+[2026-07-14T07:36:39.215Z]     readable: true
+[2026-07-14T07:36:39.215Z]     rgrp: true
+[2026-07-14T07:36:39.215Z]     roth: true
+[2026-07-14T07:36:39.215Z]     rusr: true
+[2026-07-14T07:36:39.215Z]     size: 1532
+[2026-07-14T07:36:39.215Z]     uid: 1000
+[2026-07-14T07:36:39.215Z]     version: '3164131200'
+[2026-07-14T07:36:39.215Z]     wgrp: true
+[2026-07-14T07:36:39.215Z]     woth: false
+[2026-07-14T07:36:39.215Z]     writeable: true
+[2026-07-14T07:36:39.215Z]     wusr: true
+[2026-07-14T07:36:39.215Z]     xgrp: false
+[2026-07-14T07:36:39.215Z]     xoth: false
+[2026-07-14T07:36:39.215Z]     xusr: false
+[2026-07-14T07:36:39.215Z] 
+[2026-07-14T07:36:39.215Z] TASK [Fail if main class not found] ********************************************
+[2026-07-14T07:36:39.215Z] skipping: [54.211.144.46] => changed=false 
+[2026-07-14T07:36:39.215Z]   false_condition: not main_class_check.stat.exists
+[2026-07-14T07:36:39.215Z]   skip_reason: Conditional result was False
+[2026-07-14T07:36:39.215Z] 
+[2026-07-14T07:36:39.215Z] TASK [Create systemd service for Royal Hotel application] **********************
+[2026-07-14T07:36:40.126Z] changed: [54.211.144.46] => changed=true 
+[2026-07-14T07:36:40.126Z]   checksum: 8fd46bc0450d4f61b1265948b1efe7213a18dadd
+[2026-07-14T07:36:40.126Z]   dest: /etc/systemd/system/royal-hotel.service
+[2026-07-14T07:36:40.126Z]   gid: 0
+[2026-07-14T07:36:40.126Z]   group: root
+[2026-07-14T07:36:40.126Z]   md5sum: f2c4b479f4bd4a2ae7ff9dee336f9bd2
+[2026-07-14T07:36:40.126Z]   mode: '0644'
+[2026-07-14T07:36:40.126Z]   owner: root
+[2026-07-14T07:36:40.126Z]   secontext: system_u:object_r:systemd_unit_file_t:s0
+[2026-07-14T07:36:40.126Z]   size: 451
+[2026-07-14T07:36:40.126Z]   src: /home/ec2-user/.ansible/tmp/ansible-tmp-1784014599.0138988-38512-254580320766102/source
+[2026-07-14T07:36:40.126Z]   state: file
+[2026-07-14T07:36:40.126Z]   uid: 0
+[2026-07-14T07:36:40.126Z] 
+[2026-07-14T07:36:40.126Z] TASK [Reload systemd daemon] ***************************************************
+[2026-07-14T07:36:40.677Z] ok: [54.211.144.46] => changed=false 
+[2026-07-14T07:36:40.677Z]   name: null
+[2026-07-14T07:36:40.677Z]   status: {}
+[2026-07-14T07:36:40.677Z] 
+[2026-07-14T07:36:40.677Z] TASK [Enable and start Royal Hotel application service] ************************
+[2026-07-14T07:36:41.228Z] changed: [54.211.144.46] => changed=true 
+[2026-07-14T07:36:41.228Z]   enabled: true
+[2026-07-14T07:36:41.228Z]   name: royal-hotel
+[2026-07-14T07:36:41.228Z]   state: started
+[2026-07-14T07:36:41.228Z]   status:
+[2026-07-14T07:36:41.228Z]     AccessSELinuxContext: system_u:object_r:systemd_unit_file_t:s0
+[2026-07-14T07:36:41.228Z]     ActiveEnterTimestampMonotonic: '0'
+[2026-07-14T07:36:41.228Z]     ActiveExitTimestampMonotonic: '0'
+[2026-07-14T07:36:41.228Z]     ActiveState: inactive
+[2026-07-14T07:36:41.228Z]     After: -.mount sysinit.target network.target system.slice basic.target
+[2026-07-14T07:36:41.228Z]     AllowIsolate: 'no'
+[2026-07-14T07:36:41.228Z]     AssertResult: 'no'
+[2026-07-14T07:36:41.228Z]     AssertTimestampMonotonic: '0'
+[2026-07-14T07:36:41.228Z]     Before: shutdown.target
+[2026-07-14T07:36:41.228Z]     BlockIOAccounting: 'no'
+[2026-07-14T07:36:41.228Z]     BlockIOWeight: '[not set]'
+[2026-07-14T07:36:41.228Z]     CPUAccounting: 'yes'
+[2026-07-14T07:36:41.228Z]     CPUAffinityFromNUMA: 'no'
+[2026-07-14T07:36:41.228Z]     CPUQuotaPerSecUSec: infinity
+[2026-07-14T07:36:41.228Z]     CPUQuotaPeriodUSec: infinity
+[2026-07-14T07:36:41.228Z]     CPUSchedulingPolicy: '0'
+[2026-07-14T07:36:41.228Z]     CPUSchedulingPriority: '0'
+[2026-07-14T07:36:41.228Z]     CPUSchedulingResetOnFork: 'no'
+[2026-07-14T07:36:41.228Z]     CPUShares: '[not set]'
+[2026-07-14T07:36:41.228Z]     CPUUsageNSec: '[not set]'
+[2026-07-14T07:36:41.228Z]     CPUWeight: '[not set]'
+[2026-07-14T07:36:41.228Z]     CacheDirectoryMode: '0755'
+[2026-07-14T07:36:41.228Z]     CanFreeze: 'yes'
+[2026-07-14T07:36:41.228Z]     CanIsolate: 'no'
+[2026-07-14T07:36:41.228Z]     CanReload: 'no'
+[2026-07-14T07:36:41.228Z]     CanStart: 'yes'
+[2026-07-14T07:36:41.228Z]     CanStop: 'yes'
+[2026-07-14T07:36:41.228Z]     CapabilityBoundingSet: cap_chown cap_dac_override cap_dac_read_search cap_fowner cap_fsetid cap_kill cap_setgid cap_setuid cap_setpcap cap_linux_immutable cap_net_bind_service cap_net_broadcast cap_net_admin cap_net_raw cap_ipc_lock cap_ipc_owner cap_sys_module cap_sys_rawio cap_sys_chroot cap_sys_ptrace cap_sys_pacct cap_sys_admin cap_sys_boot cap_sys_nice cap_sys_resource cap_sys_time cap_sys_tty_config cap_mknod cap_lease cap_audit_write cap_audit_control cap_setfcap cap_mac_override cap_mac_admin cap_syslog cap_wake_alarm cap_block_suspend cap_audit_read cap_perfmon cap_bpf cap_checkpoint_restore
+[2026-07-14T07:36:41.228Z]     CleanResult: success
+[2026-07-14T07:36:41.228Z]     CollectMode: inactive
+[2026-07-14T07:36:41.228Z]     ConditionResult: 'no'
+[2026-07-14T07:36:41.228Z]     ConditionTimestampMonotonic: '0'
+[2026-07-14T07:36:41.228Z]     ConfigurationDirectoryMode: '0755'
+[2026-07-14T07:36:41.228Z]     Conflicts: shutdown.target
+[2026-07-14T07:36:41.228Z]     ControlGroupId: '0'
+[2026-07-14T07:36:41.228Z]     ControlPID: '0'
+[2026-07-14T07:36:41.228Z]     CoredumpFilter: '0x33'
+[2026-07-14T07:36:41.228Z]     DefaultDependencies: 'yes'
+[2026-07-14T07:36:41.228Z]     DefaultMemoryLow: '0'
+[2026-07-14T07:36:41.228Z]     DefaultMemoryMin: '0'
+[2026-07-14T07:36:41.228Z]     Delegate: 'no'
+[2026-07-14T07:36:41.228Z]     Description: Royal Hotel Java Application
+[2026-07-14T07:36:41.228Z]     DevicePolicy: auto
+[2026-07-14T07:36:41.228Z]     DynamicUser: 'no'
+[2026-07-14T07:36:41.228Z]     ExecMainCode: '0'
+[2026-07-14T07:36:41.228Z]     ExecMainExitTimestampMonotonic: '0'
+[2026-07-14T07:36:41.228Z]     ExecMainPID: '0'
+[2026-07-14T07:36:41.228Z]     ExecMainStartTimestampMonotonic: '0'
+[2026-07-14T07:36:41.228Z]     ExecMainStatus: '0'
+[2026-07-14T07:36:41.228Z]     ExecStart: '{ path=/usr/bin/java ; argv[]=/usr/bin/java -cp /opt/royal-hotel/app/build com.example.SimpleWebApp ; ignore_errors=no ; start_time=[n/a] ; stop_time=[n/a] ; pid=0 ; code=(null) ; status=0/0 }'
+[2026-07-14T07:36:41.228Z]     ExecStartEx: '{ path=/usr/bin/java ; argv[]=/usr/bin/java -cp /opt/royal-hotel/app/build com.example.SimpleWebApp ; flags= ; start_time=[n/a] ; stop_time=[n/a] ; pid=0 ; code=(null) ; status=0/0 }'
+[2026-07-14T07:36:41.228Z]     ExitType: main
+[2026-07-14T07:36:41.228Z]     FailureAction: none
+[2026-07-14T07:36:41.228Z]     FileDescriptorStoreMax: '0'
+[2026-07-14T07:36:41.228Z]     FinalKillSignal: '9'
+[2026-07-14T07:36:41.228Z]     FragmentPath: /etc/systemd/system/royal-hotel.service
+[2026-07-14T07:36:41.228Z]     FreezerState: running
+[2026-07-14T07:36:41.228Z]     GID: '[not set]'
+[2026-07-14T07:36:41.228Z]     Group: ec2-user
+[2026-07-14T07:36:41.228Z]     GuessMainPID: 'yes'
+[2026-07-14T07:36:41.228Z]     IOAccounting: 'no'
+[2026-07-14T07:36:41.228Z]     IOReadBytes: '18446744073709551615'
+[2026-07-14T07:36:41.228Z]     IOReadOperations: '18446744073709551615'
+[2026-07-14T07:36:41.228Z]     IOSchedulingClass: '2'
+[2026-07-14T07:36:41.228Z]     IOSchedulingPriority: '4'
+[2026-07-14T07:36:41.228Z]     IOWeight: '[not set]'
+[2026-07-14T07:36:41.228Z]     IOWriteBytes: '18446744073709551615'
+[2026-07-14T07:36:41.228Z]     IOWriteOperations: '18446744073709551615'
+[2026-07-14T07:36:41.228Z]     IPAccounting: 'no'
+[2026-07-14T07:36:41.228Z]     IPEgressBytes: '[no data]'
+[2026-07-14T07:36:41.228Z]     IPEgressPackets: '[no data]'
+[2026-07-14T07:36:41.228Z]     IPIngressBytes: '[no data]'
+[2026-07-14T07:36:41.228Z]     IPIngressPackets: '[no data]'
+[2026-07-14T07:36:41.228Z]     Id: royal-hotel.service
+[2026-07-14T07:36:41.228Z]     IgnoreOnIsolate: 'no'
+[2026-07-14T07:36:41.228Z]     IgnoreSIGPIPE: 'yes'
+[2026-07-14T07:36:41.228Z]     InactiveEnterTimestampMonotonic: '0'
+[2026-07-14T07:36:41.228Z]     InactiveExitTimestampMonotonic: '0'
+[2026-07-14T07:36:41.228Z]     JobRunningTimeoutUSec: infinity
+[2026-07-14T07:36:41.228Z]     JobTimeoutAction: none
+[2026-07-14T07:36:41.228Z]     JobTimeoutUSec: infinity
+[2026-07-14T07:36:41.228Z]     KeyringMode: private
+[2026-07-14T07:36:41.228Z]     KillMode: control-group
+[2026-07-14T07:36:41.228Z]     KillSignal: '15'
+[2026-07-14T07:36:41.228Z]     LimitAS: infinity
+[2026-07-14T07:36:41.228Z]     LimitASSoft: infinity
+[2026-07-14T07:36:41.228Z]     LimitCORE: infinity
+[2026-07-14T07:36:41.228Z]     LimitCORESoft: infinity
+[2026-07-14T07:36:41.228Z]     LimitCPU: infinity
+[2026-07-14T07:36:41.228Z]     LimitCPUSoft: infinity
+[2026-07-14T07:36:41.228Z]     LimitDATA: infinity
+[2026-07-14T07:36:41.228Z]     LimitDATASoft: infinity
+[2026-07-14T07:36:41.228Z]     LimitFSIZE: infinity
+[2026-07-14T07:36:41.228Z]     LimitFSIZESoft: infinity
+[2026-07-14T07:36:41.228Z]     LimitLOCKS: infinity
+[2026-07-14T07:36:41.228Z]     LimitLOCKSSoft: infinity
+[2026-07-14T07:36:41.228Z]     LimitMEMLOCK: infinity
+[2026-07-14T07:36:41.228Z]     LimitMEMLOCKSoft: infinity
+[2026-07-14T07:36:41.228Z]     LimitMSGQUEUE: '819200'
+[2026-07-14T07:36:41.228Z]     LimitMSGQUEUESoft: '819200'
+[2026-07-14T07:36:41.228Z]     LimitNICE: '0'
+[2026-07-14T07:36:41.228Z]     LimitNICESoft: '0'
+[2026-07-14T07:36:41.228Z]     LimitNOFILE: '65535'
+[2026-07-14T07:36:41.228Z]     LimitNOFILESoft: '65535'
+[2026-07-14T07:36:41.228Z]     LimitNPROC: infinity
+[2026-07-14T07:36:41.228Z]     LimitNPROCSoft: infinity
+[2026-07-14T07:36:41.228Z]     LimitRSS: infinity
+[2026-07-14T07:36:41.228Z]     LimitRSSSoft: infinity
+[2026-07-14T07:36:41.228Z]     LimitRTPRIO: '0'
+[2026-07-14T07:36:41.228Z]     LimitRTPRIOSoft: '0'
+[2026-07-14T07:36:41.228Z]     LimitRTTIME: infinity
+[2026-07-14T07:36:41.228Z]     LimitRTTIMESoft: infinity
+[2026-07-14T07:36:41.228Z]     LimitSIGPENDING: '30446'
+[2026-07-14T07:36:41.228Z]     LimitSIGPENDINGSoft: '30446'
+[2026-07-14T07:36:41.228Z]     LimitSTACK: '10485760'
+[2026-07-14T07:36:41.228Z]     LimitSTACKSoft: '10485760'
+[2026-07-14T07:36:41.228Z]     LoadState: loaded
+[2026-07-14T07:36:41.228Z]     LockPersonality: 'no'
+[2026-07-14T07:36:41.228Z]     LogLevelMax: '-1'
+[2026-07-14T07:36:41.228Z]     LogRateLimitBurst: '0'
+[2026-07-14T07:36:41.228Z]     LogRateLimitIntervalUSec: '0'
+[2026-07-14T07:36:41.228Z]     LogsDirectoryMode: '0755'
+[2026-07-14T07:36:41.228Z]     MainPID: '0'
+[2026-07-14T07:36:41.228Z]     ManagedOOMMemoryPressure: auto
+[2026-07-14T07:36:41.228Z]     ManagedOOMMemoryPressureLimit: '0'
+[2026-07-14T07:36:41.228Z]     ManagedOOMPreference: none
+[2026-07-14T07:36:41.228Z]     ManagedOOMSwap: auto
+[2026-07-14T07:36:41.228Z]     MemoryAccounting: 'yes'
+[2026-07-14T07:36:41.228Z]     MemoryAvailable: infinity
+[2026-07-14T07:36:41.228Z]     MemoryCurrent: '[not set]'
+[2026-07-14T07:36:41.228Z]     MemoryDenyWriteExecute: 'no'
+[2026-07-14T07:36:41.228Z]     MemoryHigh: infinity
+[2026-07-14T07:36:41.228Z]     MemoryLimit: infinity
+[2026-07-14T07:36:41.228Z]     MemoryLow: '0'
+[2026-07-14T07:36:41.228Z]     MemoryMax: infinity
+[2026-07-14T07:36:41.228Z]     MemoryMin: '0'
+[2026-07-14T07:36:41.228Z]     MemorySwapMax: infinity
+[2026-07-14T07:36:41.228Z]     MountAPIVFS: 'no'
+[2026-07-14T07:36:41.228Z]     NFileDescriptorStore: '0'
+[2026-07-14T07:36:41.228Z]     NRestarts: '0'
+[2026-07-14T07:36:41.228Z]     NUMAPolicy: n/a
+[2026-07-14T07:36:41.228Z]     Names: royal-hotel.service
+[2026-07-14T07:36:41.228Z]     NeedDaemonReload: 'no'
+[2026-07-14T07:36:41.228Z]     Nice: '0'
+[2026-07-14T07:36:41.228Z]     NoNewPrivileges: 'no'
+[2026-07-14T07:36:41.228Z]     NonBlocking: 'no'
+[2026-07-14T07:36:41.228Z]     NotifyAccess: none
+[2026-07-14T07:36:41.228Z]     OOMPolicy: stop
+[2026-07-14T07:36:41.228Z]     OOMScoreAdjust: '0'
+[2026-07-14T07:36:41.228Z]     OnFailureJobMode: replace
+[2026-07-14T07:36:41.228Z]     OnSuccessJobMode: fail
+[2026-07-14T07:36:41.228Z]     Perpetual: 'no'
+[2026-07-14T07:36:41.228Z]     PrivateDevices: 'no'
+[2026-07-14T07:36:41.228Z]     PrivateIPC: 'no'
+[2026-07-14T07:36:41.228Z]     PrivateMounts: 'no'
+[2026-07-14T07:36:41.228Z]     PrivateNetwork: 'no'
+[2026-07-14T07:36:41.228Z]     PrivateTmp: 'no'
+[2026-07-14T07:36:41.228Z]     PrivateUsers: 'no'
+[2026-07-14T07:36:41.228Z]     ProcSubset: all
+[2026-07-14T07:36:41.228Z]     ProtectClock: 'no'
+[2026-07-14T07:36:41.228Z]     ProtectControlGroups: 'no'
+[2026-07-14T07:36:41.228Z]     ProtectHome: 'no'
+[2026-07-14T07:36:41.228Z]     ProtectHostname: 'no'
+[2026-07-14T07:36:41.228Z]     ProtectKernelLogs: 'no'
+[2026-07-14T07:36:41.228Z]     ProtectKernelModules: 'no'
+[2026-07-14T07:36:41.228Z]     ProtectKernelTunables: 'no'
+[2026-07-14T07:36:41.228Z]     ProtectProc: default
+[2026-07-14T07:36:41.228Z]     ProtectSystem: 'no'
+[2026-07-14T07:36:41.228Z]     RefuseManualStart: 'no'
+[2026-07-14T07:36:41.228Z]     RefuseManualStop: 'no'
+[2026-07-14T07:36:41.228Z]     ReloadResult: success
+[2026-07-14T07:36:41.228Z]     RemainAfterExit: 'no'
+[2026-07-14T07:36:41.228Z]     RemoveIPC: 'no'
+[2026-07-14T07:36:41.228Z]     Requires: -.mount sysinit.target system.slice
+[2026-07-14T07:36:41.228Z]     RequiresMountsFor: /opt/royal-hotel/app
+[2026-07-14T07:36:41.228Z]     Restart: always
+[2026-07-14T07:36:41.228Z]     RestartKillSignal: '15'
+[2026-07-14T07:36:41.228Z]     RestartUSec: 10s
+[2026-07-14T07:36:41.228Z]     RestrictNamespaces: 'no'
+[2026-07-14T07:36:41.228Z]     RestrictRealtime: 'no'
+[2026-07-14T07:36:41.228Z]     RestrictSUIDSGID: 'no'
+[2026-07-14T07:36:41.228Z]     Result: success
+[2026-07-14T07:36:41.228Z]     RootDirectoryStartOnly: 'no'
+[2026-07-14T07:36:41.228Z]     RuntimeDirectoryMode: '0755'
+[2026-07-14T07:36:41.228Z]     RuntimeDirectoryPreserve: 'no'
+[2026-07-14T07:36:41.228Z]     RuntimeMaxUSec: infinity
+[2026-07-14T07:36:41.228Z]     RuntimeRandomizedExtraUSec: '0'
+[2026-07-14T07:36:41.228Z]     SameProcessGroup: 'no'
+[2026-07-14T07:36:41.228Z]     SecureBits: '0'
+[2026-07-14T07:36:41.228Z]     SendSIGHUP: 'no'
+[2026-07-14T07:36:41.228Z]     SendSIGKILL: 'yes'
+[2026-07-14T07:36:41.228Z]     Slice: system.slice
+[2026-07-14T07:36:41.228Z]     StandardError: append
+[2026-07-14T07:36:41.228Z]     StandardInput: 'null'
+[2026-07-14T07:36:41.228Z]     StandardOutput: append
+[2026-07-14T07:36:41.228Z]     StartLimitAction: none
+[2026-07-14T07:36:41.228Z]     StartLimitBurst: '5'
+[2026-07-14T07:36:41.228Z]     StartLimitIntervalUSec: 10s
+[2026-07-14T07:36:41.228Z]     StartupBlockIOWeight: '[not set]'
+[2026-07-14T07:36:41.228Z]     StartupCPUShares: '[not set]'
+[2026-07-14T07:36:41.228Z]     StartupCPUWeight: '[not set]'
+[2026-07-14T07:36:41.228Z]     StartupIOWeight: '[not set]'
+[2026-07-14T07:36:41.228Z]     StateChangeTimestampMonotonic: '0'
+[2026-07-14T07:36:41.228Z]     StateDirectoryMode: '0755'
+[2026-07-14T07:36:41.228Z]     StatusErrno: '0'
+[2026-07-14T07:36:41.228Z]     StopWhenUnneeded: 'no'
+[2026-07-14T07:36:41.228Z]     SubState: dead
+[2026-07-14T07:36:41.228Z]     SuccessAction: none
+[2026-07-14T07:36:41.228Z]     SuccessExitStatus: '143'
+[2026-07-14T07:36:41.228Z]     SyslogFacility: '3'
+[2026-07-14T07:36:41.228Z]     SyslogLevel: '6'
+[2026-07-14T07:36:41.228Z]     SyslogLevelPrefix: 'yes'
+[2026-07-14T07:36:41.228Z]     SyslogPriority: '30'
+[2026-07-14T07:36:41.228Z]     SystemCallErrorNumber: '2147483646'
+[2026-07-14T07:36:41.228Z]     TTYReset: 'no'
+[2026-07-14T07:36:41.228Z]     TTYVHangup: 'no'
+[2026-07-14T07:36:41.228Z]     TTYVTDisallocate: 'no'
+[2026-07-14T07:36:41.228Z]     TasksAccounting: 'yes'
+[2026-07-14T07:36:41.228Z]     TasksCurrent: '[not set]'
+[2026-07-14T07:36:41.228Z]     TasksMax: '2255'
+[2026-07-14T07:36:41.228Z]     TimeoutAbortUSec: 1min 30s
+[2026-07-14T07:36:41.228Z]     TimeoutCleanUSec: infinity
+[2026-07-14T07:36:41.228Z]     TimeoutStartFailureMode: terminate
+[2026-07-14T07:36:41.228Z]     TimeoutStartUSec: 1min 30s
+[2026-07-14T07:36:41.228Z]     TimeoutStopFailureMode: terminate
+[2026-07-14T07:36:41.228Z]     TimeoutStopUSec: 1min 30s
+[2026-07-14T07:36:41.228Z]     TimerSlackNSec: '50000'
+[2026-07-14T07:36:41.228Z]     Transient: 'no'
+[2026-07-14T07:36:41.228Z]     Type: simple
+[2026-07-14T07:36:41.228Z]     UID: '[not set]'
+[2026-07-14T07:36:41.228Z]     UMask: '0022'
+[2026-07-14T07:36:41.228Z]     UnitFilePreset: disabled
+[2026-07-14T07:36:41.228Z]     UnitFileState: disabled
+[2026-07-14T07:36:41.228Z]     User: ec2-user
+[2026-07-14T07:36:41.228Z]     UtmpMode: init
+[2026-07-14T07:36:41.228Z]     WatchdogSignal: '6'
+[2026-07-14T07:36:41.228Z]     WatchdogTimestampMonotonic: '0'
+[2026-07-14T07:36:41.228Z]     WatchdogUSec: infinity
+[2026-07-14T07:36:41.228Z]     WorkingDirectory: /opt/royal-hotel/app
+[2026-07-14T07:36:41.228Z] 
+[2026-07-14T07:36:41.228Z] TASK [Wait for application port to become available] ***************************
+[2026-07-14T07:36:47.715Z] ok: [54.211.144.46] => changed=false 
+[2026-07-14T07:36:47.715Z]   elapsed: 5
+[2026-07-14T07:36:47.715Z]   match_groupdict: {}
+[2026-07-14T07:36:47.715Z]   match_groups: []
+[2026-07-14T07:36:47.715Z]   path: null
+[2026-07-14T07:36:47.715Z]   port: 8080
+[2026-07-14T07:36:47.715Z]   search_regex: null
+[2026-07-14T07:36:47.715Z]   state: started
+[2026-07-14T07:36:47.715Z] 
+[2026-07-14T07:36:47.715Z] TASK [Check service status] ****************************************************
+[2026-07-14T07:36:47.715Z] ok: [54.211.144.46] => changed=false 
+[2026-07-14T07:36:47.715Z]   cmd:
+[2026-07-14T07:36:47.715Z]   - systemctl
+[2026-07-14T07:36:47.715Z]   - status
+[2026-07-14T07:36:47.715Z]   - royal-hotel
+[2026-07-14T07:36:47.715Z]   - --no-pager
+[2026-07-14T07:36:47.715Z]   delta: '0:00:00.013110'
+[2026-07-14T07:36:47.715Z]   end: '2026-07-14 07:36:46.838975'
+[2026-07-14T07:36:47.715Z]   msg: ''
+[2026-07-14T07:36:47.715Z]   rc: 0
+[2026-07-14T07:36:47.715Z]   start: '2026-07-14 07:36:46.825865'
+[2026-07-14T07:36:47.715Z]   stderr: ''
+[2026-07-14T07:36:47.715Z]   stderr_lines: <omitted>
+[2026-07-14T07:36:47.715Z]   stdout: |-
+[2026-07-14T07:36:47.715Z]     ● royal-hotel.service - Royal Hotel Java Application
+[2026-07-14T07:36:47.715Z]          Loaded: loaded (/etc/systemd/system/royal-hotel.service; enabled; preset: disabled)
+[2026-07-14T07:36:47.715Z]          Active: active (running) since Tue 2026-07-14 07:36:41 UTC; 5s ago
+[2026-07-14T07:36:47.715Z]        Main PID: 29654 (java)
+[2026-07-14T07:36:47.715Z]           Tasks: 21 (limit: 2255)
+[2026-07-14T07:36:47.715Z]          Memory: 20.6M
+[2026-07-14T07:36:47.715Z]             CPU: 163ms
+[2026-07-14T07:36:47.715Z]          CGroup: /system.slice/royal-hotel.service
+[2026-07-14T07:36:47.715Z]                  └─29654 /usr/bin/java -cp /opt/royal-hotel/app/build com.example.SimpleWebApp
+[2026-07-14T07:36:47.715Z]   
+[2026-07-14T07:36:47.715Z]     Jul 14 07:36:41 ip-10-10-1-58.ec2.internal systemd[1]: Started royal-hotel.service - Royal Hotel Java Application.
+[2026-07-14T07:36:47.715Z]   stdout_lines: <omitted>
+[2026-07-14T07:36:47.715Z] 
+[2026-07-14T07:36:47.715Z] TASK [Show service status] *****************************************************
+[2026-07-14T07:36:47.715Z] ok: [54.211.144.46] => 
+[2026-07-14T07:36:47.715Z]   service_status.stdout_lines:
+[2026-07-14T07:36:47.715Z]   - ● royal-hotel.service - Royal Hotel Java Application
+[2026-07-14T07:36:47.715Z]   - '     Loaded: loaded (/etc/systemd/system/royal-hotel.service; enabled; preset: disabled)'
+[2026-07-14T07:36:47.715Z]   - '     Active: active (running) since Tue 2026-07-14 07:36:41 UTC; 5s ago'
+[2026-07-14T07:36:47.715Z]   - '   Main PID: 29654 (java)'
+[2026-07-14T07:36:47.715Z]   - '      Tasks: 21 (limit: 2255)'
+[2026-07-14T07:36:47.715Z]   - '     Memory: 20.6M'
+[2026-07-14T07:36:47.715Z]   - '        CPU: 163ms'
+[2026-07-14T07:36:47.715Z]   - '     CGroup: /system.slice/royal-hotel.service'
+[2026-07-14T07:36:47.715Z]   - '             └─29654 /usr/bin/java -cp /opt/royal-hotel/app/build com.example.SimpleWebApp'
+[2026-07-14T07:36:47.715Z]   - ''
+[2026-07-14T07:36:47.715Z]   - 'Jul 14 07:36:41 ip-10-10-1-58.ec2.internal systemd[1]: Started royal-hotel.service - Royal Hotel Java Application.'
+[2026-07-14T07:36:47.715Z] 
+[2026-07-14T07:36:47.715Z] TASK [Verify application responds on localhost] ********************************
+[2026-07-14T07:36:47.715Z] ok: [54.211.144.46] => changed=false 
+[2026-07-14T07:36:47.715Z]   content_length: '4146'
+[2026-07-14T07:36:47.715Z]   content_type: text/html; charset=UTF-8
+[2026-07-14T07:36:47.715Z]   cookies: {}
+[2026-07-14T07:36:47.715Z]   cookies_string: ''
+[2026-07-14T07:36:47.715Z]   date: Tue, 14 Jul 2026 07:36:47 GMT
+[2026-07-14T07:36:47.715Z]   elapsed: 0
+[2026-07-14T07:36:47.715Z]   msg: OK (4146 bytes)
+[2026-07-14T07:36:47.715Z]   redirected: false
+[2026-07-14T07:36:47.715Z]   status: 200
+[2026-07-14T07:36:47.715Z]   url: http://localhost:8080
+[2026-07-14T07:36:47.715Z] 
+[2026-07-14T07:36:47.715Z] TASK [Show HTTP check result] **************************************************
+[2026-07-14T07:36:47.965Z] ok: [54.211.144.46] => 
+[2026-07-14T07:36:47.965Z]   msg:
+[2026-07-14T07:36:47.965Z]   - 'HTTP status: 200'
+[2026-07-14T07:36:47.965Z]   - 'URL: http://localhost:8080'
+[2026-07-14T07:36:47.965Z] 
+[2026-07-14T07:36:47.965Z] TASK [Show recent application logs] ********************************************
+[2026-07-14T07:36:48.216Z] ok: [54.211.144.46] => changed=false 
+[2026-07-14T07:36:48.216Z]   cmd: |-
+[2026-07-14T07:36:48.216Z]     echo "===== application.log ====="
+[2026-07-14T07:36:48.216Z]     tail -30 /var/log/royal-hotel/application.log 2>/dev/null || true
+[2026-07-14T07:36:48.216Z]     echo ""
+[2026-07-14T07:36:48.216Z]     echo "===== application-error.log ====="
+[2026-07-14T07:36:48.216Z]     tail -30 /var/log/royal-hotel/application-error.log 2>/dev/null || true
+[2026-07-14T07:36:48.216Z]   delta: '0:00:00.006294'
+[2026-07-14T07:36:48.216Z]   end: '2026-07-14 07:36:47.971372'
+[2026-07-14T07:36:48.216Z]   msg: ''
+[2026-07-14T07:36:48.216Z]   rc: 0
+[2026-07-14T07:36:48.216Z]   start: '2026-07-14 07:36:47.965078'
+[2026-07-14T07:36:48.216Z]   stderr: ''
+[2026-07-14T07:36:48.216Z]   stderr_lines: <omitted>
+[2026-07-14T07:36:48.216Z]   stdout: |-
+[2026-07-14T07:36:48.216Z]     ===== application.log =====
+[2026-07-14T07:36:48.216Z]     Starting Royal Hotels Gateway Server on port 8080...
+[2026-07-14T07:36:48.216Z]     Server is up and listening for cluster requests.
+[2026-07-14T07:36:48.216Z]     Served Royal Hotels health payload to: /127.0.0.1:50692
+[2026-07-14T07:36:48.216Z]   
+[2026-07-14T07:36:48.216Z]     ===== application-error.log =====
+[2026-07-14T07:36:48.216Z]   stdout_lines: <omitted>
+[2026-07-14T07:36:48.216Z] 
+[2026-07-14T07:36:48.216Z] TASK [Print application logs] **************************************************
+[2026-07-14T07:36:48.216Z] ok: [54.211.144.46] => 
+[2026-07-14T07:36:48.216Z]   app_logs.stdout_lines:
+[2026-07-14T07:36:48.216Z]   - ===== application.log =====
+[2026-07-14T07:36:48.216Z]   - Starting Royal Hotels Gateway Server on port 8080...
+[2026-07-14T07:36:48.216Z]   - Server is up and listening for cluster requests.
+[2026-07-14T07:36:48.216Z]   - 'Served Royal Hotels health payload to: /127.0.0.1:50692'
+[2026-07-14T07:36:48.216Z]   - ''
+[2026-07-14T07:36:48.216Z]   - ===== application-error.log =====
+[2026-07-14T07:36:48.216Z] 
+[2026-07-14T07:36:48.216Z] TASK [Deployment summary] ******************************************************
+[2026-07-14T07:36:48.216Z] ok: [54.211.144.46] => 
+[2026-07-14T07:36:48.216Z]   msg:
+[2026-07-14T07:36:48.216Z]   - Royal Hotel deployment completed.
+[2026-07-14T07:36:48.216Z]   - 'Main class: com.example.SimpleWebApp'
+[2026-07-14T07:36:48.216Z]   - 'Application port: 8080'
+[2026-07-14T07:36:48.216Z]   - 'Public URL: http://54.211.144.46:8080'
+[2026-07-14T07:36:48.216Z] 
+[2026-07-14T07:36:48.216Z] PLAY RECAP *********************************************************************
+[2026-07-14T07:36:48.216Z] 54.211.144.46              : ok=29   changed=4    unreachable=0    failed=0    skipped=2    rescued=0    ignored=1   
+[2026-07-14T07:36:48.216Z] 
+[Pipeline] }
+[Pipeline] // dir
+[Pipeline] }
+[Pipeline] // timeout
+[Pipeline] }
+[Pipeline] // stage
+[Pipeline] stage
+[Pipeline] { (Verify Application from Jenkins)
+[Pipeline] echo
+[2026-07-14T07:36:48.357Z] Verifying application from Jenkins server...
+[Pipeline] sh
+[2026-07-14T07:36:48.621Z] + echo 'Checking application URL: http://54.211.144.46:8080'
+[2026-07-14T07:36:48.621Z] Checking application URL: http://54.211.144.46:8080
+[2026-07-14T07:36:48.621Z] + for i in {1..12}
+[2026-07-14T07:36:48.621Z] ++ curl -s -o /dev/null -w '%{http_code}' --max-time 10 http://54.211.144.46:8080
+[2026-07-14T07:36:48.621Z] + HTTP_CODE=200
+[2026-07-14T07:36:48.621Z] + echo 'Attempt 1: HTTP status code = 200'
+[2026-07-14T07:36:48.621Z] Attempt 1: HTTP status code = 200
+[2026-07-14T07:36:48.621Z] + '[' 200 = 200 ']'
+[2026-07-14T07:36:48.621Z] + echo 'Application is responding.'
+[2026-07-14T07:36:48.621Z] Application is responding.
+[2026-07-14T07:36:48.621Z] + exit 0
+[Pipeline] }
+[Pipeline] // stage
+[Pipeline] stage
+[Pipeline] { (Deployment Summary)
+[Pipeline] echo
+[2026-07-14T07:36:48.687Z] 
+[2026-07-14T07:36:48.687Z] ==================================================
+[2026-07-14T07:36:48.687Z] DEPLOYMENT SUCCESSFUL
+[2026-07-14T07:36:48.687Z] ==================================================
+[2026-07-14T07:36:48.687Z] 
+[2026-07-14T07:36:48.687Z] Dev Server IP:
+[2026-07-14T07:36:48.687Z] 54.211.144.46
+[2026-07-14T07:36:48.687Z] 
+[2026-07-14T07:36:48.687Z] Application URL:
+[2026-07-14T07:36:48.687Z] http://54.211.144.46:8080
+[2026-07-14T07:36:48.687Z] 
+[2026-07-14T07:36:48.687Z] SSH Command:
+[2026-07-14T07:36:48.687Z] ssh -i /var/lib/jenkins/.ssh/royal-hotel-dev-key.pem ec2-user@54.211.144.46
+[2026-07-14T07:36:48.687Z] 
+[2026-07-14T07:36:48.687Z] Systemd Service on Dev Server:
+[2026-07-14T07:36:48.687Z] royal-hotel
+[2026-07-14T07:36:48.687Z] 
+[2026-07-14T07:36:48.687Z] Useful Commands:
+[2026-07-14T07:36:48.687Z] sudo systemctl status royal-hotel --no-pager
+[2026-07-14T07:36:48.687Z] sudo journalctl -u royal-hotel -n 100 --no-pager
+[2026-07-14T07:36:48.687Z] curl -I http://localhost:8080
+[2026-07-14T07:36:48.687Z] 
+[2026-07-14T07:36:48.687Z] ==================================================
+[2026-07-14T07:36:48.687Z] 
+[Pipeline] }
+[Pipeline] // stage
+[Pipeline] stage
+[Pipeline] { (Declarative: Post Actions)
+[Pipeline] echo
+[2026-07-14T07:36:48.743Z] Pipeline succeeded. Royal Hotel application deployed successfully.
+[Pipeline] echo
+[2026-07-14T07:36:48.756Z] Cleaning Jenkins workspace...
+[Pipeline] sh
+[2026-07-14T07:36:49.017Z] + rm -f terraform/tfplan
+[2026-07-14T07:36:49.017Z] + rm -f ansible/inventory.ini
+[Pipeline] cleanWs
+[2026-07-14T07:36:49.035Z] [WS-CLEANUP] Deleting project workspace...
+[2026-07-14T07:36:49.080Z] [WS-CLEANUP] done
+[Pipeline] }
+[Pipeline] // stage
+[Pipeline] }
+[Pipeline] // timestamps
+[Pipeline] }
+[Pipeline] // timeout
+[Pipeline] }
+[Pipeline] // withEnv
+[Pipeline] }
+[Pipeline] // withEnv
+[Pipeline] }
+[Pipeline] // node
+[Pipeline] End of Pipeline
+Finished: SUCCESS
