@@ -119,5 +119,15 @@ aws dynamodb scan --table-name royal-hotel-tf-locks --region us-east-1 --query '
 
 --------------------------------------------
 
+sudo su - jenkins -s /bin/bash
+
+cd /tmp
+git clone https://github.com/amankainth/royal-hotel-devops-pipeline-v2.git
+cd royal-hotel-devops-pipeline-v2/bootstrap
+
+chmod +x setup-backend.sh
+./setup-backend.sh
+
+exit
 
 
