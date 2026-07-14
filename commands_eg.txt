@@ -22,7 +22,7 @@ chmod +x setup-backend.sh
 ./setup-backend.sh
 exit
 ---------------------------------------------------------------------------
-Jenkin fix on Fiserv Network
+Jenkin fix on private Network (8080 -> 80)
 
 # Stop Jenkins
 sudo systemctl stop jenkins
@@ -70,7 +70,7 @@ echo "http://$(curl -s http://checkip.amazonaws.com)"
 Check if Security group has inbound rule for port 80
 
 ---------------------------------------------------------------------------------
-
+installs required 
 
 # Install yum-utils (needed for repo management)
 sudo yum install -y yum-utils
@@ -81,27 +81,19 @@ sudo yum-config-manager --add-repo https://rpm.releases.hashicorp.com/AmazonLinu
 # Install Git and Terraform together
 sudo dnf install -y git terraform
 
-# Verify installations
-echo ""
-echo "=== Git ==="
-git --version
-
-echo ""
-echo "=== Terraform ==="
-terraform --version
-
 sudo dnf install -y ansible
 
+git --version
+terraform --version
 
 ------------------
 
-Kill Stuck Build
+Kill Stuck Build -> Jenkin
 
 Jenkins.instance.getItemByFullName("piple-tf-webS").getBuildByNumber(1).doKill()
 
 ------------------------------------------
-
-
+Create S3 Bucket - AWS CLI --> 
 
 # 1. Create S3 bucket
 aws s3api create-bucket --bucket royal-hotel-tf-state-bucket --region us-east-1
