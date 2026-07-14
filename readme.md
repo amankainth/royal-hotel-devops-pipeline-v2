@@ -266,7 +266,7 @@ Destroy operations require explicit approval before execution.
 
 <h2>📷 Screenshots</h2>
 
-<p>Add screenshots after deployment.</p>
+<p>Screenshots after deployment.</p>
 
 <pre>
 screenshots/
