@@ -32,16 +32,11 @@ pipeline {
 
         stage('Prepare Jenkins Environment') {
             steps {
-                echo 'Preparing Jenkins SSH and temp directories...'
-
                 sh '''
                     mkdir -p /var/lib/jenkins/.ssh
                     chmod 700 /var/lib/jenkins/.ssh
-
-                    mkdir -p /var/tmp
-                    chmod 1777 /var/tmp
-                '''
-            }
+                    '''
+             }
         }
 
         stage('Terraform Init') {
