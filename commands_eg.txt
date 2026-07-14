@@ -90,6 +90,8 @@ echo ""
 echo "=== Terraform ==="
 terraform --version
 
+sudo dnf install -y ansible
+
 
 ------------------
 
@@ -124,4 +126,6 @@ aws dynamodb delete-item --table-name royal-hotel-tf-locks --key '{"LockID":{"S"
 aws dynamodb scan --table-name royal-hotel-tf-locks --region us-east-1 --query 'Items[].LockID.S' --output table
 
 --------------------------------------------
+
+
 
