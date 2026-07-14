@@ -47,7 +47,7 @@ pipeline {
             steps {
                 dir('terraform') {
                     echo '🔍 Validating Terraform configuration...'
-                    sh 'terraform fmt -check -diff || echo "⚠️  Formatting issues (not blocking)"'
+                    sh 'terraform fmt -check -diff || echo "Formatting issues (not blocking)"'
                     sh 'terraform validate'
                 }
             }
@@ -67,7 +67,7 @@ pipeline {
             options { timeout(time: 10, unit: 'MINUTES') }
             steps {
                 dir('terraform') {
-                    echo '🚀 Provisioning infrastructure...'
+                    echo 'Provisioning infrastructure...'
                     sh 'terraform apply -input=false -auto-approve tfplan'
                 }
             }
@@ -87,8 +87,8 @@ pipeline {
                             returnStdout: true
                         ).trim()
 
-                        echo "✅ Dev Server IP: ${env.DEV_INSTANCE_IP}"
-                        echo "🔑 SSH Key: ${env.SSH_KEY_PATH}"
+                        echo "Dev Server IP: ${env.DEV_INSTANCE_IP}"
+                        echo "SSH Key: ${env.SSH_KEY_PATH}"
                     }
                 }
             }
@@ -118,13 +118,13 @@ EOL
                 sh """
                     for i in {1..10}; do
                         if ssh -i ${env.SSH_KEY_PATH} -o StrictHostKeyChecking=no -o ConnectTimeout=5 ec2-user@${env.DEV_INSTANCE_IP} 'echo ready' 2>/dev/null; then
-                            echo "✅ SSH is ready"
+                            echo "SSH is ready"
                             exit 0
                         fi
                         echo "SSH not ready, waiting 10s..."
                         sleep 10
                     done
-                    echo "❌ SSH did not become ready in time"
+                    echo "SSH did not become ready in time"
                     exit 1
                 """
             }
@@ -143,7 +143,7 @@ EOL
         stage('Deployment Summary') {
             steps {
                 echo """
-                ✅ DEPLOYMENT SUCCESSFUL
+                DEPLOYMENT SUCCESSFUL
 
                 Dev Server IP:  ${env.DEV_INSTANCE_IP}
                 App URL:        http://${env.DEV_INSTANCE_IP}
@@ -155,13 +155,13 @@ EOL
 
     post {
         success {
-            echo '✅ Pipeline succeeded!'
+            echo 'Pipeline succeeded!'
         }
         failure {
-            echo '❌ Pipeline failed - check logs above'
+            echo 'Pipeline failed - check logs above'
         }
         aborted {
-            echo '⚠️  Pipeline aborted'
+            echo 'Pipeline aborted'
         }
         cleanup {
             sh 'rm -f terraform/tfplan 2>/dev/null || true'
