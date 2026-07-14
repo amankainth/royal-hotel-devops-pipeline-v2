@@ -129,5 +129,44 @@ chmod +x setup-backend.sh
 ./setup-backend.sh
 
 exit
+---------------------------------------------------------------------------------
+echo "===== S3 CONTENTS ====="
+aws s3 ls s3://royal-hotel-tf-state-bucket/ --recursive
 
+echo ""
+echo "===== S3 VERSIONING ====="
+aws s3api get-bucket-versioning --bucket royal-hotel-tf-state-bucket --output text
+
+echo ""
+echo "===== DYNAMODB LOCKS ====="
+aws dynamodb scan --table-name royal-hotel-tf-locks --region us-east-1 --query 'Items[].LockID.S' --output table
+
+--------------------------------------------------------------------------------
+Terraform Control Node (Jenkins)
+        |
+        | Uses tls_private_key provider
+        ↓
+Generates RSA 4096-bit keypair in memory
+        |
+        +--- Public Key -------+
+        |                      |
+        |                      ↓
+        |          AWS EC2 Keypair Registry
+        |          (aws_key_pair.dev_key)
+        |                      |
+        |                      | Attached to EC2 at boot
+        |                      ↓
+        |                Dev Server EC2
+        |                ~/.ssh/authorized_keys
+        |
+        +--- Private Key -------+
+                                |
+                                ↓
+              /var/lib/jenkins/.ssh/royal-hotel-dev-key.pem
+              (on Jenkins control node)
+                                |
+                                | Used by Ansible for SSH
+                                ↓
+                        SSH → Dev Server
+------------------------------------------------------------------------------------------
 
