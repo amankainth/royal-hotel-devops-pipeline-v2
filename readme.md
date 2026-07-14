@@ -25,3 +25,13 @@ This creates:
 S3 bucket: royal-hotel-tf-state-bucket
 DynamoDB table: royal-hotel-tf-locks
 
+----------------------------------------------------------------------
+royal-hotel-devops-pipeline-v2/
+│
+├── README.md
+├── Jenkinsfile
+├── Jenkinsfile.destroy
+├── terraform/
+├── ansible/
+└── bootstrap/
+--------------------------------------------------------------------------
