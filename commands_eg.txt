@@ -117,6 +117,16 @@ aws dynamodb delete-item --table-name royal-hotel-tf-locks --key '{"LockID":{"S"
 
 aws dynamodb scan --table-name royal-hotel-tf-locks --region us-east-1 --query 'Items[].LockID.S' --output table
 
+If S3 lock:
+# 1. See the lock file
+aws s3 ls s3://royal-hotel-tf-state-bucket/dev/
+
+# 2. Delete it
+aws s3 rm s3://royal-hotel-tf-state-bucket/dev/terraform.tfstate.tflock
+
+# 3. Verify gone
+aws s3 ls s3://royal-hotel-tf-state-bucket/dev/
+
 --------------------------------------------
 
 sudo su - jenkins -s /bin/bash
