@@ -14,7 +14,7 @@
     app_dir: /opt/royal-hotel/app
     app_service_name: royal-hotel
     app_port: 8080
-    java_package: java-21-amazon-corretto-devel
+    java_package: java-17-amazon-corretto-devel
 
   pre_tasks:
     - name: Display target server information
@@ -44,7 +44,7 @@
     - name: Install Java 21, Maven, Git and required tools
       dnf:
         name:
-          - "{{ java_package }}"
+          - java-17-amazon-corretto-devel
           - maven
           - git
           - wget
