@@ -103,6 +103,14 @@ resource "aws_security_group" "dev_instance" {
   }
 
   ingress {
+    description = "Royal Hotel App"
+    from_port   = 8080
+    to_port     = 8080
+    protocol    = "tcp"
+    cidr_blocks = ["0.0.0.0/0"]
+  }
+
+  ingress {
     description = "App Port (Node.js/Custom)"
     from_port   = 3000
     to_port     = 3000
