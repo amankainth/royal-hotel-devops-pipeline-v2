@@ -1,0 +1,246 @@
+---
+- name: Configure Royal Hotel Dev Server
+  hosts: webservers
+  become: true
+  gather_facts: true
+
+  vars:
+    app_name: royal-hotel
+    app_port: 3000
+    node_version: "18"
+
+  pre_tasks:
+    - name: Print server info
+      debug:
+        msg: |
+          Configuring: {{ inventory_hostname }}
+          OS: {{ ansible_distribution }} {{ ansible_distribution_version }}
+          Architecture: {{ ansible_architecture }}
+
+  tasks:
+    # ============================================
+    # System Update
+    # ============================================
+    - name: Update all packages
+      dnf:
+        name: "*"
+        state: latest
+        update_cache: true
+      register: dnf_update
+      retries: 3
+      delay: 5
+
+    - name: Install essential packages
+      dnf:
+        name:
+          - git
+          - wget
+          - curl
+          - unzip
+          - tar
+          - jq
+          - htop
+          - vim
+        state: present
+
+    # ============================================
+    # Java 17 (for backend apps)
+    # ============================================
+    - name: Install Java 17
+      dnf:
+        name: java-17-amazon-corretto
+        state: present
+
+    - name: Verify Java installation
+      command: java -version
+      register: java_version
+      changed_when: false
+
+    - name: Show Java version
+      debug:
+        var: java_version.stderr_lines
+
+    # ============================================
+    # Docker
+    # ============================================
+    - name: Install Docker
+      dnf:
+        name: docker
+        state: present
+
+    - name: Start and enable Docker
+      systemd:
+        name: docker
+        state: started
+        enabled: true
+
+    - name: Add ec2-user to docker group
+      user:
+        name: ec2-user
+        groups: docker
+        append: true
+
+    - name: Verify Docker
+      command: docker --version
+      register: docker_version
+      changed_when: false
+
+    - name: Show Docker version
+      debug:
+        var: docker_version.stdout
+
+    # ============================================
+    # Node.js 18 (LTS)
+    # ============================================
+    - name: Install Node.js dependencies
+      dnf:
+        name:
+          - gcc-c++
+          - make
+        state: present
+
+    - name: Add NodeSource repository
+      shell: |
+        curl -fsSL https://rpm.nodesource.com/setup_{{ node_version }}.x | bash -
+      args:
+        creates: /etc/yum.repos.d/nodesource-nodejs.repo
+
+    - name: Install Node.js
+      dnf:
+        name: nodejs
+        state: present
+
+    - name: Verify Node.js
+      command: node --version
+      register: node_version_output
+      changed_when: false
+
+    - name: Show Node.js version
+      debug:
+        var: node_version_output.stdout
+
+    - name: Install PM2 (process manager)
+      npm:
+        name: pm2
+        global: true
+        state: present
+
+    # ============================================
+    # Application User & Directories
+    # ============================================
+    - name: Create app user
+      user:
+        name: appuser
+        shell: /bin/bash
+        create_home: true
+        groups: docker
+        append: true
+
+    - name: Create app directory
+      file:
+        path: /opt/{{ app_name }}
+        state: directory
+        owner: appuser
+        group: appuser
+        mode: '0755'
+
+    - name: Create logs directory
+      file:
+        path: /var/log/{{ app_name }}
+        state: directory
+        owner: appuser
+        group: appuser
+        mode: '0755'
+
+    # ============================================
+    # Sample Deploy (Placeholder - Replace with Real App)
+    # ============================================
+    - name: Create sample index page (placeholder)
+      copy:
+        dest: /opt/{{ app_name }}/index.html
+        owner: appuser
+        group: appuser
+        mode: '0644'
+        content: |
+          <!DOCTYPE html>
+          <html>
+          <head>
+              <title>Royal Hotel - Deployed via Jenkins</title>
+              <style>
+                  body { font-family: Arial, sans-serif; margin: 40px; background: #f0f0f0; }
+                  .container { max-width: 800px; margin: 0 auto; background: white; padding: 30px; border-radius: 8px; }
+                  h1 { color: #2c3e50; }
+                  .info { background: #ecf0f1; padding: 15px; border-radius: 5px; margin-top: 20px; }
+                  .success { color: #27ae60; font-weight: bold; }
+              </style>
+          </head>
+          <body>
+              <div class="container">
+                  <h1>🏨 Royal Hotel DevOps Pipeline</h1>
+                  <p class="success">✅ Deployment Successful!</p>
+                  <div class="info">
+                      <strong>Deployed by:</strong> Jenkins CI/CD Pipeline<br>
+                      <strong>Server:</strong> {{ ansible_hostname }}<br>
+                      <strong>OS:</strong> {{ ansible_distribution }} {{ ansible_distribution_version }}<br>
+                      <strong>Configured by:</strong> Ansible<br>
+                      <strong>Provisioned by:</strong> Terraform
+                  </div>
+              </div>
+          </body>
+          </html>
+
+    - name: Install and start simple HTTP server (Python)
+      copy:
+        dest: /etc/systemd/system/{{ app_name }}.service
+        mode: '0644'
+        content: |
+          [Unit]
+          Description=Royal Hotel Web Server
+          After=network.target
+
+          [Service]
+          Type=simple
+          User=appuser
+          WorkingDirectory=/opt/{{ app_name }}
+          ExecStart=/usr/bin/python3 -m http.server 80
+          Restart=always
+          RestartSec=5
+
+          [Install]
+          WantedBy=multi-user.target
+
+    - name: Enable and start app service
+      systemd:
+        name: "{{ app_name }}"
+        state: restarted
+        enabled: true
+        daemon_reload: true
+
+    # ============================================
+    # Verification
+    # ============================================
+    - name: Wait for app port to be ready
+      wait_for:
+        port: 80
+        host: localhost
+        timeout: 30
+
+    - name: Test app HTTP endpoint
+      uri:
+        url: http://localhost
+        return_content: false
+        status_code: 200
+      register: app_check
+
+    - name: Show deployment status
+      debug:
+        msg: |
+          ✅ Server configured successfully!
+
+          Installed:
+          - Java 17: {{ java_version.stderr_lines[0] | default('N/A') }}
+          - Docker: {{ docker_version.stdout }}
+          - Node.js: {{ node_version_output.stdout }}
+          - App running on port 80: {{ app_check.status == 200 | ternary('✅ YES', '❌ NO') }}
+
+          Access at: http://{{ ansible_default_ipv4.address }}
