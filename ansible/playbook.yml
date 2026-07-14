@@ -12,9 +12,11 @@
     app_repo_url: "https://github.com/amankainth/hotel_management_health.git"
     app_repo_branch: main
     app_dir: /opt/royal-hotel/app
+    app_build_dir: /opt/royal-hotel/app/build
     app_service_name: royal-hotel
     app_port: 8080
     java_package: java-17-amazon-corretto-devel
+    main_class: com.example.SimpleWebApp
 
   pre_tasks:
     - name: Display target server information
@@ -22,13 +24,14 @@
         msg:
           - "Target Host: {{ inventory_hostname }}"
           - "OS: {{ ansible_distribution }} {{ ansible_distribution_version }}"
-          - "Architecture: {{ ansible_architecture }}"
           - "Application: {{ app_name }}"
           - "Repository: {{ app_repo_url }}"
+          - "Main Class: {{ main_class }}"
 
   tasks:
+
     # ============================================================
-    # OS Update
+    # OS Update and Package Install
     # ============================================================
 
     - name: Update all OS packages
@@ -37,15 +40,10 @@
         state: latest
         update_cache: yes
 
-    # ============================================================
-    # Install Required Packages
-    # ============================================================
-
-    - name: Install Java 21, Maven, Git and required tools
+    - name: Install Java 17, Git and required tools
       dnf:
         name:
-          - java-17-amazon-corretto-devel
-          - maven
+          - "{{ java_package }}"
           - git
           - wget
           - unzip
@@ -61,26 +59,8 @@
       debug:
         var: java_version.stderr_lines
 
-    - name: Verify Maven version
-      command: mvn -version
-      register: maven_version
-      changed_when: false
-
-    - name: Show Maven version
-      debug:
-        var: maven_version.stdout_lines
-
-    - name: Verify Git version
-      command: git --version
-      register: git_version
-      changed_when: false
-
-    - name: Show Git version
-      debug:
-        var: git_version.stdout
-
     # ============================================================
-    # Prepare Application Directory
+    # Prepare Directories
     # ============================================================
 
     - name: Create application base directory
@@ -100,7 +80,7 @@
         mode: "0755"
 
     # ============================================================
-    # Stop Existing Service Before Deployment
+    # Stop Existing Service
     # ============================================================
 
     - name: Stop existing Royal Hotel service if running
@@ -110,7 +90,7 @@
       ignore_errors: yes
 
     # ============================================================
-    # Clone Application Repository
+    # Clone Repository
     # ============================================================
 
     - name: Clone Royal Hotel application repository
@@ -122,46 +102,66 @@
       become_user: "{{ app_user }}"
 
     # ============================================================
-    # Build Application
+    # Compile Java Sources
     # ============================================================
 
-    - name: Build Java application with Maven
-      command: mvn clean package -DskipTests
-      args:
-        chdir: "{{ app_dir }}"
-      become_user: "{{ app_user }}"
-      register: maven_build
+    - name: Create build output directory
+      file:
+        path: "{{ app_build_dir }}"
+        state: directory
+        owner: "{{ app_user }}"
+        group: "{{ app_group }}"
+        mode: "0755"
 
-    - name: Show Maven build output
-      debug:
-        var: maven_build.stdout_lines
-
-    # ============================================================
-    # Locate JAR File
-    # ============================================================
-
-    - name: Locate packaged application JAR file
+    - name: Find all Java source files
       find:
-        paths: "{{ app_dir }}/target"
-        patterns: "*.jar"
-        file_type: file
-      register: jar_files
+        paths: "{{ app_dir }}/src"
+        patterns: "*.java"
+        recurse: yes
+      register: java_files
 
-    - name: Fail if no JAR file was created
+    - name: Fail if no Java source files found
       fail:
-        msg: "No JAR file found under {{ app_dir }}/target. Maven build may have failed."
-      when: jar_files.files | length == 0
+        msg: "No Java source files found under {{ app_dir }}/src"
+      when: java_files.files | length == 0
 
-    - name: Set application JAR path
-      set_fact:
-        app_jar_path: "{{ jar_files.files | map(attribute='path') | list | first }}"
-
-    - name: Display selected JAR file
+    - name: Show found Java files
       debug:
-        msg: "Using JAR file: {{ app_jar_path }}"
+        msg: "Found {{ java_files.files | length }} Java source file(s)"
+
+    - name: Compile Java sources with javac
+      shell: |
+        cd {{ app_dir }}
+        javac -d {{ app_build_dir }} $(find src -name "*.java")
+      become_user: "{{ app_user }}"
+      register: javac_build
+
+    - name: Show compile output
+      debug:
+        msg: "Compilation successful"
+      when: javac_build.rc == 0
+
+    - name: List compiled classes
+      shell: find {{ app_build_dir }} -name "*.class"
+      register: class_files
+      changed_when: false
+
+    - name: Show compiled classes
+      debug:
+        var: class_files.stdout_lines
+
+    - name: Verify main class exists
+      stat:
+        path: "{{ app_build_dir }}/{{ main_class | replace('.', '/') }}.class"
+      register: main_class_check
+
+    - name: Fail if main class not found
+      fail:
+        msg: "Main class {{ main_class }}.class not found under {{ app_build_dir }}"
+      when: not main_class_check.stat.exists
 
     # ============================================================
-    # Create Systemd Service
+    # Systemd Service
     # ============================================================
 
     - name: Create systemd service for Royal Hotel application
@@ -176,10 +176,11 @@
           After=network.target
 
           [Service]
+          Type=simple
           User={{ app_user }}
           Group={{ app_group }}
           WorkingDirectory={{ app_dir }}
-          ExecStart=/usr/bin/java -jar {{ app_jar_path }}
+          ExecStart=/usr/bin/java -cp {{ app_build_dir }} {{ main_class }}
           SuccessExitStatus=143
           Restart=always
           RestartSec=10
@@ -207,10 +208,10 @@
       wait_for:
         host: localhost
         port: "{{ app_port }}"
-        timeout: 120
-        delay: 10
+        timeout: 60
+        delay: 5
 
-    - name: Check Royal Hotel service status
+    - name: Check service status
       command: systemctl status "{{ app_service_name }}" --no-pager
       register: service_status
       changed_when: false
@@ -233,24 +234,23 @@
       register: app_http_check
       ignore_errors: yes
 
-    - name: Display application HTTP check result
+    - name: Show HTTP check result
       debug:
         msg:
-          - "HTTP check completed"
-          - "Status: {{ app_http_check.status | default('No status returned') }}"
+          - "HTTP status: {{ app_http_check.status | default('N/A') }}"
           - "URL: http://localhost:{{ app_port }}"
 
     - name: Show recent application logs
       shell: |
         echo "===== application.log ====="
-        tail -50 /var/log/royal-hotel/application.log 2>/dev/null || true
+        tail -30 /var/log/royal-hotel/application.log 2>/dev/null || true
         echo ""
         echo "===== application-error.log ====="
-        tail -50 /var/log/royal-hotel/application-error.log 2>/dev/null || true
+        tail -30 /var/log/royal-hotel/application-error.log 2>/dev/null || true
       register: app_logs
       changed_when: false
 
-    - name: Print recent application logs
+    - name: Print application logs
       debug:
         var: app_logs.stdout_lines
 
@@ -258,9 +258,7 @@
     - name: Deployment summary
       debug:
         msg:
-          - "✅ Royal Hotel deployment completed."
-          - "Application directory: {{ app_dir }}"
-          - "JAR file: {{ app_jar_path }}"
-          - "Service name: {{ app_service_name }}"
+          - "Royal Hotel deployment completed."
+          - "Main class: {{ main_class }}"
           - "Application port: {{ app_port }}"
           - "Public URL: http://{{ inventory_hostname }}:{{ app_port }}"
