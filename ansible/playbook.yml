@@ -48,7 +48,6 @@
           - maven
           - git
           - wget
-          - curl
           - unzip
           - tar
         state: present
