@@ -311,8 +311,7 @@ screenshots/
 <h2>👨‍💻 Author</h2>
 
 <p>
-<b>Amandeep Kainth</b><br>
-Manager, Application Support<br>
+<b>Amandeep Kainth</b>
 Pune, India
 </p>
 
