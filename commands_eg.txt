@@ -117,3 +117,16 @@ aws dynamodb create-table \
 
 --------------------------
 
+if DynamoDB lock:
+
+aws dynamodb delete-item --table-name royal-hotel-tf-locks --key '{"LockID":{"S":"royal-hotel-tf-state-bucket/dev/terraform.tfstate"}}' --region us-east-1
+
+# Verify no locks remain
+aws dynamodb scan \
+  --table-name royal-hotel-tf-locks \
+  --region us-east-1 \
+  --query 'Items[].LockID.S' \
+  --output table
+
+--------------------------------------------
+
