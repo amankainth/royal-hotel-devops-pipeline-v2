@@ -1,0 +1,95 @@
+pipeline {
+    agent any
+
+    environment {
+        AWS_DEFAULT_REGION = 'us-east-1'
+        TMPDIR             = '/var/tmp'
+        JAVA_TOOL_OPTIONS  = '-Djava.io.tmpdir=/var/tmp'
+        TF_IN_AUTOMATION   = 'true'
+        TF_INPUT           = '0'
+        TF_CLI_ARGS        = '-no-color'
+    }
+
+    options {
+        timeout(time: 20, unit: 'MINUTES')
+        buildDiscarder(logRotator(numToKeepStr: '10'))
+        timestamps()
+        disableConcurrentBuilds()
+    }
+
+    stages {
+        stage('Checkout Code') {
+            steps {
+                echo '📥 Pulling code from GitHub...'
+                checkout scm
+            }
+        }
+
+        stage('Terraform Init') {
+            steps {
+                dir('terraform') {
+                    sh 'terraform init -input=false'
+                }
+            }
+        }
+
+        stage('Show Current Resources') {
+            steps {
+                dir('terraform') {
+                    echo '📊 Current resources in state:'
+                    sh 'terraform state list'
+                    echo ''
+                    echo '📋 Resources to be destroyed:'
+                    sh 'terraform plan -destroy -no-color | head -100'
+                }
+            }
+        }
+
+        stage('Confirm Destroy') {
+            steps {
+                script {
+                    def userInput = input(
+                        message: '⚠️  DESTROY all resources? This is IRREVERSIBLE.',
+                        ok: 'DESTROY',
+                        parameters: [
+                            choice(
+                                name: 'CONFIRM',
+                                choices: ['NO-CANCEL', 'YES-DESTROY-EVERYTHING'],
+                                description: 'This will permanently delete all AWS resources managed by Terraform'
+                            )
+                        ]
+                    )
+                    if (userInput != 'YES-DESTROY-EVERYTHING') {
+                        error '❌ Destroy cancelled by user'
+                    }
+                }
+            }
+        }
+
+        stage('Terraform Destroy') {
+            options { timeout(time: 15, unit: 'MINUTES') }
+            steps {
+                dir('terraform') {
+                    echo '💥 Destroying resources...'
+                    sh 'terraform destroy -input=false -auto-approve'
+                }
+            }
+        }
+
+        stage('Verify Destruction') {
+            steps {
+                dir('terraform') {
+                    echo '✅ Verifying:'
+                    sh 'terraform state list 2>&1 || echo "State is empty - all resources destroyed"'
+                }
+            }
+        }
+    }
+
+    post {
+        success { echo '✅ All resources destroyed successfully' }
+        failure { echo '❌ Destroy failed - manual cleanup may be needed' }
+        aborted { echo '⚠️  Destroy aborted' }
+        cleanup { cleanWs deleteDirs: true, notFailBuild: true }
+    }
+}
