@@ -1,57 +1,59 @@
 ---
-- name: Configure Royal Hotel Dev Server
+- name: Configure and Deploy Royal Hotel Application Server
   hosts: webservers
-  become: true
-  gather_facts: true
+  become: yes
+  gather_facts: yes
 
   vars:
     app_name: royal-hotel
-    app_port: 3000
-    node_version: "18"
+    app_user: ec2-user
+    app_group: ec2-user
+    app_base_dir: /opt/royal-hotel
+    app_repo_url: "https://github.com/amankainth/hotel_management_health.git"
+    app_repo_branch: main
+    app_dir: /opt/royal-hotel/app
+    app_service_name: royal-hotel
+    app_port: 8080
+    java_package: java-21-amazon-corretto-devel
 
   pre_tasks:
-    - name: Print server info
+    - name: Display target server information
       debug:
-        msg: |
-          Configuring: {{ inventory_hostname }}
-          OS: {{ ansible_distribution }} {{ ansible_distribution_version }}
-          Architecture: {{ ansible_architecture }}
+        msg:
+          - "Target Host: {{ inventory_hostname }}"
+          - "OS: {{ ansible_distribution }} {{ ansible_distribution_version }}"
+          - "Architecture: {{ ansible_architecture }}"
+          - "Application: {{ app_name }}"
+          - "Repository: {{ app_repo_url }}"
 
   tasks:
-    # ============================================
-    # System Update
-    # ============================================
-    - name: Update all packages
+    # ============================================================
+    # OS Update
+    # ============================================================
+
+    - name: Update all OS packages
       dnf:
         name: "*"
         state: latest
-        update_cache: true
-      register: dnf_update
-      retries: 3
-      delay: 5
+        update_cache: yes
 
-    - name: Install essential packages
+    # ============================================================
+    # Install Required Packages
+    # ============================================================
+
+    - name: Install Java 21, Maven, Git and required tools
       dnf:
         name:
+          - "{{ java_package }}"
+          - maven
           - git
           - wget
           - curl
           - unzip
           - tar
-          - jq
-          - htop
-          - vim
         state: present
 
-    # ============================================
-    # Java 17 (for backend apps)
-    # ============================================
-    - name: Install Java 17
-      dnf:
-        name: java-17-amazon-corretto
-        state: present
-
-    - name: Verify Java installation
+    - name: Verify Java version
       command: java -version
       register: java_version
       changed_when: false
@@ -60,187 +62,206 @@
       debug:
         var: java_version.stderr_lines
 
-    # ============================================
-    # Docker
-    # ============================================
-    - name: Install Docker
-      dnf:
-        name: docker
-        state: present
+    - name: Verify Maven version
+      command: mvn -version
+      register: maven_version
+      changed_when: false
 
-    - name: Start and enable Docker
+    - name: Show Maven version
+      debug:
+        var: maven_version.stdout_lines
+
+    - name: Verify Git version
+      command: git --version
+      register: git_version
+      changed_when: false
+
+    - name: Show Git version
+      debug:
+        var: git_version.stdout
+
+    # ============================================================
+    # Prepare Application Directory
+    # ============================================================
+
+    - name: Create application base directory
+      file:
+        path: "{{ app_base_dir }}"
+        state: directory
+        owner: "{{ app_user }}"
+        group: "{{ app_group }}"
+        mode: "0755"
+
+    - name: Create application logs directory
+      file:
+        path: /var/log/royal-hotel
+        state: directory
+        owner: "{{ app_user }}"
+        group: "{{ app_group }}"
+        mode: "0755"
+
+    # ============================================================
+    # Stop Existing Service Before Deployment
+    # ============================================================
+
+    - name: Stop existing Royal Hotel service if running
       systemd:
-        name: docker
-        state: started
-        enabled: true
+        name: "{{ app_service_name }}"
+        state: stopped
+      ignore_errors: yes
 
-    - name: Add ec2-user to docker group
-      user:
-        name: ec2-user
-        groups: docker
-        append: true
+    # ============================================================
+    # Clone Application Repository
+    # ============================================================
 
-    - name: Verify Docker
-      command: docker --version
-      register: docker_version
-      changed_when: false
+    - name: Clone Royal Hotel application repository
+      git:
+        repo: "{{ app_repo_url }}"
+        dest: "{{ app_dir }}"
+        version: "{{ app_repo_branch }}"
+        force: yes
+      become_user: "{{ app_user }}"
 
-    - name: Show Docker version
-      debug:
-        var: docker_version.stdout
+    # ============================================================
+    # Build Application
+    # ============================================================
 
-    # ============================================
-    # Node.js 18 (LTS)
-    # ============================================
-    - name: Install Node.js dependencies
-      dnf:
-        name:
-          - gcc-c++
-          - make
-        state: present
-
-    - name: Add NodeSource repository
-      shell: |
-        curl -fsSL https://rpm.nodesource.com/setup_{{ node_version }}.x | bash -
+    - name: Build Java application with Maven
+      command: mvn clean package -DskipTests
       args:
-        creates: /etc/yum.repos.d/nodesource-nodejs.repo
+        chdir: "{{ app_dir }}"
+      become_user: "{{ app_user }}"
+      register: maven_build
 
-    - name: Install Node.js
-      dnf:
-        name: nodejs
-        state: present
-
-    - name: Verify Node.js
-      command: node --version
-      register: node_version_output
-      changed_when: false
-
-    - name: Show Node.js version
+    - name: Show Maven build output
       debug:
-        var: node_version_output.stdout
+        var: maven_build.stdout_lines
 
-    - name: Install PM2 (process manager)
-      npm:
-        name: pm2
-        global: true
-        state: present
+    # ============================================================
+    # Locate JAR File
+    # ============================================================
 
-    # ============================================
-    # Application User & Directories
-    # ============================================
-    - name: Create app user
-      user:
-        name: appuser
-        shell: /bin/bash
-        create_home: true
-        groups: docker
-        append: true
+    - name: Locate packaged application JAR file
+      find:
+        paths: "{{ app_dir }}/target"
+        patterns: "*.jar"
+        file_type: file
+      register: jar_files
 
-    - name: Create app directory
-      file:
-        path: /opt/{{ app_name }}
-        state: directory
-        owner: appuser
-        group: appuser
-        mode: '0755'
+    - name: Fail if no JAR file was created
+      fail:
+        msg: "No JAR file found under {{ app_dir }}/target. Maven build may have failed."
+      when: jar_files.files | length == 0
 
-    - name: Create logs directory
-      file:
-        path: /var/log/{{ app_name }}
-        state: directory
-        owner: appuser
-        group: appuser
-        mode: '0755'
+    - name: Set application JAR path
+      set_fact:
+        app_jar_path: "{{ jar_files.files | map(attribute='path') | list | first }}"
 
-    # ============================================
-    # Sample Deploy (Placeholder - Replace with Real App)
-    # ============================================
-    - name: Create sample index page (placeholder)
+    - name: Display selected JAR file
+      debug:
+        msg: "Using JAR file: {{ app_jar_path }}"
+
+    # ============================================================
+    # Create Systemd Service
+    # ============================================================
+
+    - name: Create systemd service for Royal Hotel application
       copy:
-        dest: /opt/{{ app_name }}/index.html
-        owner: appuser
-        group: appuser
-        mode: '0644'
-        content: |
-          <!DOCTYPE html>
-          <html>
-          <head>
-              <title>Royal Hotel - Deployed via Jenkins</title>
-              <style>
-                  body { font-family: Arial, sans-serif; margin: 40px; background: #f0f0f0; }
-                  .container { max-width: 800px; margin: 0 auto; background: white; padding: 30px; border-radius: 8px; }
-                  h1 { color: #2c3e50; }
-                  .info { background: #ecf0f1; padding: 15px; border-radius: 5px; margin-top: 20px; }
-                  .success { color: #27ae60; font-weight: bold; }
-              </style>
-          </head>
-          <body>
-              <div class="container">
-                  <h1>🏨 Royal Hotel DevOps Pipeline</h1>
-                  <p class="success">✅ Deployment Successful!</p>
-                  <div class="info">
-                      <strong>Deployed by:</strong> Jenkins CI/CD Pipeline<br>
-                      <strong>Server:</strong> {{ ansible_hostname }}<br>
-                      <strong>OS:</strong> {{ ansible_distribution }} {{ ansible_distribution_version }}<br>
-                      <strong>Configured by:</strong> Ansible<br>
-                      <strong>Provisioned by:</strong> Terraform
-                  </div>
-              </div>
-          </body>
-          </html>
-
-    - name: Install and start simple HTTP server (Python)
-      copy:
-        dest: /etc/systemd/system/{{ app_name }}.service
-        mode: '0644'
+        dest: "/etc/systemd/system/{{ app_service_name }}.service"
+        owner: root
+        group: root
+        mode: "0644"
         content: |
           [Unit]
-          Description=Royal Hotel Web Server
+          Description=Royal Hotel Java Application
           After=network.target
 
           [Service]
-          Type=simple
-          User=appuser
-          WorkingDirectory=/opt/{{ app_name }}
-          ExecStart=/usr/bin/python3 -m http.server 80
+          User={{ app_user }}
+          Group={{ app_group }}
+          WorkingDirectory={{ app_dir }}
+          ExecStart=/usr/bin/java -jar {{ app_jar_path }}
+          SuccessExitStatus=143
           Restart=always
-          RestartSec=5
+          RestartSec=10
+          StandardOutput=append:/var/log/royal-hotel/application.log
+          StandardError=append:/var/log/royal-hotel/application-error.log
 
           [Install]
           WantedBy=multi-user.target
 
-    - name: Enable and start app service
+    - name: Reload systemd daemon
       systemd:
-        name: "{{ app_name }}"
+        daemon_reload: yes
+
+    - name: Enable and start Royal Hotel application service
+      systemd:
+        name: "{{ app_service_name }}"
         state: restarted
-        enabled: true
-        daemon_reload: true
+        enabled: yes
 
-    # ============================================
+    # ============================================================
     # Verification
-    # ============================================
-    - name: Wait for app port to be ready
+    # ============================================================
+
+    - name: Wait for application port to become available
       wait_for:
-        port: 80
         host: localhost
-        timeout: 30
+        port: "{{ app_port }}"
+        timeout: 120
+        delay: 10
 
-    - name: Test app HTTP endpoint
-      uri:
-        url: http://localhost
-        return_content: false
-        status_code: 200
-      register: app_check
+    - name: Check Royal Hotel service status
+      command: systemctl status "{{ app_service_name }}" --no-pager
+      register: service_status
+      changed_when: false
+      ignore_errors: yes
 
-    - name: Show deployment status
+    - name: Show service status
       debug:
-        msg: |
-          ✅ Server configured successfully!
+        var: service_status.stdout_lines
 
-          Installed:
-          - Java 17: {{ java_version.stderr_lines[0] | default('N/A') }}
-          - Docker: {{ docker_version.stdout }}
-          - Node.js: {{ node_version_output.stdout }}
-          - App running on port 80: {{ app_check.status == 200 | ternary('✅ YES', '❌ NO') }}
+    - name: Verify application responds on localhost
+      uri:
+        url: "http://localhost:{{ app_port }}"
+        method: GET
+        status_code:
+          - 200
+          - 302
+          - 401
+          - 403
+        return_content: no
+      register: app_http_check
+      ignore_errors: yes
 
-          Access at: http://{{ ansible_default_ipv4.address }}
+    - name: Display application HTTP check result
+      debug:
+        msg:
+          - "HTTP check completed"
+          - "Status: {{ app_http_check.status | default('No status returned') }}"
+          - "URL: http://localhost:{{ app_port }}"
+
+    - name: Show recent application logs
+      shell: |
+        echo "===== application.log ====="
+        tail -50 /var/log/royal-hotel/application.log 2>/dev/null || true
+        echo ""
+        echo "===== application-error.log ====="
+        tail -50 /var/log/royal-hotel/application-error.log 2>/dev/null || true
+      register: app_logs
+      changed_when: false
+
+    - name: Print recent application logs
+      debug:
+        var: app_logs.stdout_lines
+
+  post_tasks:
+    - name: Deployment summary
+      debug:
+        msg:
+          - "✅ Royal Hotel deployment completed."
+          - "Application directory: {{ app_dir }}"
+          - "JAR file: {{ app_jar_path }}"
+          - "Service name: {{ app_service_name }}"
+          - "Application port: {{ app_port }}"
+          - "Public URL: http://{{ inventory_hostname }}:{{ app_port }}"
