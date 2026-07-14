@@ -4,6 +4,12 @@ variable "aws_region" {
   default     = "us-east-1"
 }
 
+variable "ami_id" {
+  description = "Specific AMI ID to use for EC2 instance"
+  type        = string
+  default     = "ami-01edba92f9036f76e"
+}
+
 variable "project_name" {
   description = "Project name for tagging"
   type        = string
